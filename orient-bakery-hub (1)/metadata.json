@@ -1,0 +1,7 @@
+{
+  "name": "Orient Bakery Hub",
+  "description": "A high-end artisan bakery platform featuring a live menu, a 3D cake architect tool, and a wholesale catering portal.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
