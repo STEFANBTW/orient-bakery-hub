@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Orient</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin />
+    <!-- Fonts used in the design -->
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700&family=Noto+Serif:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Newsreader:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              primary: "#f26c0d", /* Updated to Orange */
+              "background-light": "#f8f7f5", /* Updated Light BG */
+              "background-dark": "#221710",
+              "surface-dark": "#2d2018",
+              "surface-light": "#ffffff",
+              "neutral-dark": "#2d241e",
+              "neutral-mid": "#4a3e36",
+              "terracotta": "#8a3324",
+            },
+            fontFamily: {
+              sans: ["Work Sans", "sans-serif"],
+              serif: ["Noto Serif", "serif"],
+              display: ["Newsreader", "serif"],
+            },
+            animation: {
+              'pulse-ring': 'pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite',
+              'marquee': 'marquee 40s linear infinite',
+            },
+            keyframes: {
+              'pulse-ring': {
+                '0%': { transform: 'scale(0.33)', opacity: '0' },
+                '50%': { opacity: '0.5' },
+                '80%': { transform: 'scale(1)', opacity: '0' },
+                '100%': { opacity: '0' },
+              },
+              'marquee': {
+                '0%': { transform: 'translateX(0)' },
+                '100%': { transform: 'translateX(-50%)' },
+              }
+            }
+          },
+        },
+      }
+    </script>
+    <style>
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #221710;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #4a3e36;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #f26c0d;
+      }
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+      
+      /* Glass Effects */
+      .glass-card {
+        background: rgba(44, 30, 22, 0.6);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(242, 108, 13, 0.1);
+      }
+      
+      .glass-panel {
+          background: rgba(45, 32, 24, 0.7);
+          backdrop-filter: blur(10px);
+          -webkit-backdrop-filter: blur(10px);
+          border: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      /* Light mode glass overrides */
+      html:not(.dark) .glass-panel {
+          background: rgba(255, 255, 255, 0.8);
+          border: 1px solid rgba(0, 0, 0, 0.05);
+      }
+      html:not(.dark) .glass-card {
+          background: rgba(255, 255, 255, 0.6);
+          border: 1px solid rgba(242, 108, 13, 0.1);
+      }
+      
+      /* Smooth Scroll */
+      html {
+        scroll-behavior: smooth;
+      }
+
+      /* Steam animation simulation */
+      @keyframes steam {
+          0% { opacity: 0; transform: translateY(0) scale(1); filter: blur(4px); }
+          50% { opacity: 0.6; transform: translateY(-20px) scale(1.1); filter: blur(8px); }
+          100% { opacity: 0; transform: translateY(-40px) scale(1.2); filter: blur(12px); }
+      }
+      .steam-effect {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 60%);
+          animation: steam 4s infinite ease-out;
+          pointer-events: none;
+      }
+      .steam-delay-1 { animation-delay: 1s; }
+
+      /* Map Interactivity */
+      .table-seat {
+          transition: all 0.3s ease;
+          cursor: pointer;
+      }
+      .table-seat:hover {
+          fill: #f26c0d; /* Primary color on hover */
+          fill-opacity: 0.8;
+          stroke: #fff;
+          stroke-width: 2px;
+          filter: drop-shadow(0 0 8px rgba(242, 108, 13, 0.5));
+      }
+      .table-seat.occupied {
+          fill: #4b3b32;
+          cursor: not-allowed;
+      }
+      .table-seat.occupied:hover {
+          fill: #4b3b32;
+          stroke: none;
+          filter: none;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://esm.sh/react@^19.2.4/",
+    "react": "https://esm.sh/react@^19.2.4",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body class="bg-background-light dark:bg-background-dark text-gray-800 dark:text-gray-100 font-sans selection:bg-primary selection:text-white">
+    <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>

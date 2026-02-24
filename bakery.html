@@ -1,0 +1,2238 @@
+﻿<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<!--
+  â•”â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•—
+  â•‘  ORIENT BAKERY HUB â€” All-In-One Single HTML File               â•‘
+  â•‘  @ai-context: Complete React SPA consolidated into one file.    â•‘
+  â•‘  Originally a multi-file Vite + React + TypeScript project.     â•‘
+  â•‘  Now runs standalone via ESM imports + Babel in-browser JSX.    â•‘
+  â•‘                                                                 â•‘
+  â•‘  SECTIONS (in order):                                           â•‘
+  â•‘    1. <head> â€” CDNs, Tailwind config, styles, importmap         â•‘
+  â•‘    2. Helper Components â€” Small reusable UI pieces              â•‘
+  â•‘    3. Navbar â€” Fixed top navigation                             â•‘
+  â•‘    4. Footer â€” Site-wide footer                                 â•‘
+  â•‘    5. Home Page â€” Hero, menu, pairings, sensory journey         â•‘
+  â•‘    6. Architect Page â€” 4-step cake configurator                 â•‘
+  â•‘    7. Wholesale Page â€” B2B portal, calculator, logistics        â•‘
+  â•‘    8. Story Page â€” Artisan process, editorial                   â•‘
+  â•‘    9. App â€” Router, layout, page transitions                    â•‘
+  â•‘   10. Entry â€” ReactDOM render                                   â•‘
+  â•šâ•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+-->
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orient Bakery</title>
+    <meta name="description"
+        content="Orient Bakery â€” Jos's premier artisan bakery. Fresh bread, custom cakes, wholesale catering.">
+
+    <!-- @ai-context: Tailwind CSS via CDN with forms and container-queries plugins -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+    <!-- @ai-context: Google Fonts â€” Space Grotesk, Playfair Display (serif headings), Inter (body) -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+
+    <!-- @ai-context: Material Icons for UI elements throughout the app -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+
+    <!-- @ai-context: Tailwind theme extensions â€” brand colors, fonts, marquee animation -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#ec6d13',
+                        'background-light': '#f8f7f6',
+                        'background-dark': '#221810',
+                        'coffee-dark': '#221810',
+                        'text-coffee': '#4A3B32',
+                        'text-coffee-light': '#8C7B70',
+                    },
+                    fontFamily: {
+                        display: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    animation: {
+                        'marquee': 'marquee 25s linear infinite',
+                    },
+                    keyframes: {
+                        marquee: {
+                            '0%': { transform: 'translateX(0%)' },
+                            '100%': { transform: 'translateX(-100%)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- @ai-context: Custom CSS â€” scrollbar theming, cake spin animation, masonry grid -->
+    <style>
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        body {
+            scroll-behavior: smooth;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f8f7f6;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #ec6d13;
+            border-radius: 4px;
+        }
+
+        .cake-spin {
+            animation: spin-slow 15s linear infinite;
+        }
+
+        @keyframes spin-slow {
+            from {
+                transform: rotateY(0deg);
+            }
+
+            to {
+                transform: rotateY(360deg);
+            }
+        }
+
+        .masonry-grid {
+            column-count: 1;
+            gap: 1.5rem;
+        }
+
+        @media (min-width: 640px) {
+            .masonry-grid {
+                column-count: 2;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .masonry-grid {
+                column-count: 3;
+            }
+        }
+
+        .break-inside-avoid {
+            break-inside: avoid;
+        }
+    </style>
+
+    <!-- @ai-context: ESM Import Map â€” maps bare module specifiers to esm.sh CDN URLs -->
+    <script type="importmap">
+    {
+      "imports": {
+        "react": "https://esm.sh/react@19.0.0",
+        "react/": "https://esm.sh/react@19.0.0/",
+        "react-dom/": "https://esm.sh/react-dom@19.0.0/",
+        "react-router-dom": "https://esm.sh/react-router-dom@7.1.1",
+        "framer-motion": "https://esm.sh/framer-motion@11.15.0"
+      }
+    }
+    </script>
+
+    <!-- @ai-context: Babel standalone enables JSX syntax inside <script type="text/babel"> -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark text-text-coffee dark:text-gray-100 font-sans antialiased">
+    <div id="root"></div>
+
+    <!-- @ai-context: ALL application code lives in this single script block.
+         Babel transforms JSX to React.createElement calls at runtime.
+         data-type="module" tells Babel to treat imports as ES modules. -->
+    <script type="text/babel" data-type="module">
+        /* ================================================================
+         * SECTION 3: NAVBAR COMPONENT
+         * @ai-context: Fixed top navigation bar with logo, page links,
+         *              CTA buttons, and mobile menu trigger.
+         * @ai-dependencies: react-router-dom (Link, useLocation)
+         * ================================================================ */
+
+        const Navbar = () => {
+            const location = useLocation();
+            const isActive = (path) => location.pathname === path;
+            const navLinks = [
+                { name: 'Live Menu', path: '/' },
+                { name: 'Cake Architect', path: '/architect' },
+                { name: 'Wholesale', path: '/wholesale' },
+                { name: 'Our Story', path: '/story' },
+            ];
+            return (
+                <nav className="fixed top-0 w-full z-50 bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-md border-b border-gray-200 dark:border-gray-800">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div className="flex items-center justify-between h-20">
+                            <Link to="/" className="flex-shrink-0 flex items-center gap-2">
+                                <span className="material-icons text-primary text-3xl">bakery_dining</span>
+                                <span className="text-2xl font-bold tracking-tight uppercase font-display dark:text-white">Orient Bakery</span>
+                            </Link>
+                            <div className="hidden md:block">
+                                <div className="ml-10 flex items-center space-x-4">
+                                    {navLinks.map((link) => (
+                                        <Link key={link.path} to={link.path} className={`${isActive(link.path) ? 'text-primary' : 'text-gray-600 dark:text-gray-300 hover:text-primary'} transition-colors px-3 py-2 rounded-md text-sm font-medium`}>{link.name}</Link>
+                                    ))}
+                                    <div className="h-6 w-px bg-gray-300 dark:bg-gray-700 mx-2"></div>
+                                    <button className="flex items-center gap-2 text-text-coffee dark:text-white hover:text-primary font-bold text-sm px-3 py-2 transition-colors">
+                                        <span className="material-icons text-primary">call</span> Call the Baker
+                                    </button>
+                                    <Link to="/wholesale" className="bg-primary text-white px-5 py-2 rounded-full text-sm font-bold hover:bg-orange-600 transition-all shadow-lg shadow-primary/30">Order Pickup</Link>
+                                </div>
+                            </div>
+                            <div className="md:hidden flex items-center gap-4">
+                                <button className="text-primary font-bold"><span className="material-icons">call</span></button>
+                                <button className="text-gray-600 dark:text-gray-300"><span className="material-icons">menu</span></button>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            );
+        };
+
+        /* ================================================================
+         * SECTION 4: FOOTER COMPONENT
+         * @ai-context: Site-wide footer with logo, shop links, bakery info,
+         *              contact details, social icons, and legal links.
+         * ================================================================ */
+
+        const Footer = () => (
+            <footer className="bg-black text-white py-20 border-t border-gray-900">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-12">
+                    <div className="space-y-6">
+                        <div className="flex items-center gap-2">
+                            <span className="material-icons text-primary text-3xl">bakery_dining</span>
+                            <span className="text-xl font-bold uppercase tracking-tight">Orient Bakery</span>
+                        </div>
+                        <p className="text-gray-500 text-sm leading-relaxed">Leading the way in artisanal baking and event catering since 1998. Freshly baked daily, with passion.</p>
+                        <div className="flex gap-4">
+                            <SocialIcon icon="facebook" />
+                            <SocialIcon icon="camera_alt" />
+                            <SocialIcon icon="place" />
+                        </div>
+                    </div>
+                    <div>
+                        <h4 className="font-bold mb-6 text-gray-200">Shop</h4>
+                        <ul className="space-y-4 text-sm text-gray-500">
+                            <li><a href="#" className="hover:text-primary transition">Daily Menu</a></li>
+                            <li><a href="#" className="hover:text-primary transition">Custom Cakes</a></li>
+                            <li><a href="#" className="hover:text-primary transition">Wholesale Portal</a></li>
+                            <li><a href="#" className="hover:text-primary transition">Bulk Orders</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 className="font-bold mb-6 text-gray-200">Our Bakery</h4>
+                        <ul className="space-y-4 text-sm text-gray-500">
+                            <li><a href="#" className="hover:text-primary transition">Our Story</a></li>
+                            <li><a href="#" className="hover:text-primary transition">Workshops</a></li>
+                            <li><a href="#" className="hover:text-primary transition">Locations</a></li>
+                            <li><a href="#" className="hover:text-primary transition">Sustainability</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 className="font-bold mb-6 text-gray-200">Contact</h4>
+                        <ul className="space-y-4 text-sm text-gray-500">
+                            <li className="flex items-center gap-2"><span className="material-icons text-xs">location_on</span>No. 45 Ahmadu Bello Way, Jos</li>
+                            <li className="flex items-center gap-2"><span className="material-icons text-xs">phone</span>+234 800 ORIENT</li>
+                            <li className="flex items-center gap-2"><span className="material-icons text-xs">email</span>fresh@orientbakery.ng</li>
+                        </ul>
+                    </div>
+                </div>
+                <div className="max-w-7xl mx-auto px-4 mt-20 pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center gap-4 text-gray-600 text-xs">
+                    <p>&copy; 2024 Orient Bakery Nigeria Ltd. All rights reserved.</p>
+                    <div className="flex gap-6">
+                        <a href="#" className="hover:text-gray-400">Privacy Policy</a>
+                        <a href="#" className="hover:text-gray-400">Terms of Service</a>
+                    </div>
+                </div>
+            </footer>
+        );
+
+        /* ================================================================
+         * SECTION 5: HOME PAGE
+         * @ai-context: The main landing page featuring:
+         *   - Cinematic parallax hero with live marquee ticker
+         *   - Macro ingredient spotlight section
+         *   - Daily menu with category filter (All/Bread/Pastries/Savory)
+         *   - Sensory journey parallax section
+         *   - 3D cake showcase with rotating image
+         *   - Perfect morning pairing cards
+         *   - Catering & bulk ordering cards
+         *   - Local roots & community section
+         *   - AI chat assistant floating widget
+         * @ai-data-flow: Uses useState for activeCategory filter,
+         *                useScroll + useTransform for parallax effect.
+         * ================================================================ */
+
+        const Home = () => {
+            const { scrollYProgress } = useScroll();
+            const yParallax = useTransform(scrollYProgress, [0, 1], [0, -200]);
+            const [activeCategory, setActiveCategory] = useState('All');
+            const categories = ['All', 'Bread', 'Pastries', 'Savory'];
+
+            // @ai-context: Menu items data  each has title, category, price, description, image URL, and ingredients
+            const menuItems = [
+                { title: "Butter Croissant", category: "Pastries", price: "$4.50", desc: "27 layers of pure bliss. Baked fresh every 2 hours to ensure maximum flake.", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCzuTGeynABEZq_RNMW_0DWnpySiwUdY708i6ZVWjZ7aIl0DpPLMJq1VQVEwuiE3nMamKg_bwuczTqbcV6ecYVDUXjY9SZK519_nntwfz9HAhku_iqDi_Ef3RUdWrVu9jrh-MWAyUVc-FKp3_XCiyFx_P2OM-jDXRGULnYJqVqUqqx6jyHp_XoHc7SCS-NUZMRZsCvKWvMaSW8Dsah1KUa05a9i3V7cPWokidQYzWZ7hkP9T04I1yuxLjt0g6HhgWkppOALuJnR6wrU", ingredients: "High-fat French Butter, Organic Wheat Flour, Sea Salt, Fresh Yeast" },
+                { title: "Rustic Sourdough", category: "Bread", price: "$8.00", desc: "Fermented for 48 hours. A thick, caramelized crust with a soft, airy crumb.", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuB3ePjwRPlUyPcBB-gEiNv8MkH16tu35a6aB6_9Zj6vvtAjNzfpPl3j9BZxEiFIodTQCe9Zyw5LOmhozbuIXP9okz3ngRIWl4rKMS0SKUkOmK6mttKGX1C0orlgu70xhnIsPKsKFQHKXqBCEG3fDWZZyFyXYR9JfQecs2L1EYLc-A8kNIM_-KsioMgNvsvR0T2bdRbRNnU00mKgnsB7VshRYE5j0sjBCg60QWs45waEvck39YPu_VtdDweJzzP-3pE_auMe0BbiyI3c", ingredients: "Wild Yeast Starter (Jos), Rye Flour, Whole Wheat, Filtered Water" },
+                { title: "Forest Berry Tart", category: "Pastries", price: "$6.50", desc: "A sweet almond crust filled with Madagascar vanilla custard.", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuDYvf77WkTzo48ZPbJwUbQetCY5GnPm0VNmBHX0NT52ceOmSMsQZHiYsq9NcCufvHkW87mOr6Z7DTgftYf8q1h6AHQM8XNZeZnPrLJoJNhWZvwsRgqxS8vOeeR2JCDpJoMJqdY6l7G-xynMPgrNZX3i-mBcBfzq3YlV640wg5x5BjcnS_G_UbOryxsD1iSmAv08WogejIlucFklzxkv2CI0kfa_ilSMPwqWo6-tr1Z6Wd7aoOqW5gpClZIalrlkkyU4U9a7i9ViNPEd", ingredients: "Vanilla Bean Custard, Seasonal Berries, Almond Flour Crust, Glaze" },
+                { title: "NYC Sesame Bagel", category: "Bread", price: "$3.50", desc: "Boiled in honey water then baked. Chewy exterior, soft interior.", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCye9YH_o_PRcnhP-s4c_Ay_E9zoNz1oReHKAlsEWfNNc7YuV1Ha_6yYsqEUNMItX38C0VGq1fAUZNac96Mv6pe6yEH50CBl63aS0HNTNeWMPszVliMAlJsLceV2USAOc-QqVgcYwFhNWDkWc-U21cu4YBhsJY4vLKePO8OOJu4Ob-3FXxKeGeeC0ntOXjwSXivoh7nmf_8bN0KAJXnAI1QrUdSzNf-eKfwDlmUyKwpzDVdMYGPCLtqb1ExbXZnDi5J0HvGIlco5PcP", ingredients: "Malted Barley Flour, Sesame Seeds, Sea Salt, Honey Water Boil" },
+                { title: "Sticky Cinnamon Roll", category: "Pastries", price: "$5.00", desc: "Gooey center, crispy edges. Spiced with a hint of cardamom.", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCd_TmNBtFRIqwh5bh7iSlOdqRDJSGJVKP1T-3YCFoq-WnNanHo6WbBuRXRvvs8tGQSZK1dZn6I3a6iJHL4byM9r5DC26JFjA7U9s_o2o2ia367BS2gVpc2LHYMwm5e_UPo_r_GPIZKyQHnoR8vXlbdPWdS5z5SZxXQd68-5uWq1QMGTj01wNIGMZG1jB4PPdc9XAUU0ZRvEHw44Sdxiw4c5TdmJpuXivg3eodT1I-xcIyM6u9Br9l8Z00zpX_O4pUx_7yGlsf2Knwr", ingredients: "Ceylon Cinnamon, Brown Sugar, Cardamom, Cream Cheese Frosting" },
+                { title: "Olive Ciabatta", category: "Bread", price: "$6.50", desc: "Airy Italian slipper bread studded with Kalamata olives.", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuB3ePjwRPlUyPcBB-gEiNv8MkH16tu35a6aB6_9Zj6vvtAjNzfpPl3j9BZxEiFIodTQCe9Zyw5LOmhozbuIXP9okz3ngRIWl4rKMS0SKUkOmK6mttKGX1C0orlgu70xhnIsPKsKFQHKXqBCEG3fDWZZyFyXYR9JfQecs2L1EYLc-A8kNIM_-KsioMgNvsvR0T2bdRbRNnU00mKgnsB7VshRYE5j0sjBCg60QWs45waEvck39YPu_VtdDweJzzP-3pE_auMe0BbiyI3c", ingredients: "Wheat Flour, Water, Kalamata Olives, Olive Oil, Yeast" },
+                { title: "Spinach Feta Danish", category: "Savory", price: "$5.50", desc: "Savory pastry filled with creamy spinach and tangy feta cheese.", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAnDkmQLViId92Xb5EIwK923g9s4vEyP7kRlaoy-PSt-Q5O0XHMLFkbPtmcHArRNuxNfF0tn5WpSr4cadPNsC7b9MCBCn1LdhvH_CGIUR-ktHXG4FsOH1apFckqn7x4tnXxB0QVPJDycxVhTK2kWSOBdfFrldA95svT7P3iGydLOAxlyeiM07nPh86t_cM1naYI95F7GOQFfRaCn9oTK5SHmBnOS5QQKAPj7G81IFRGKK6nMwwdbaX0m0WZrSvRW8-rJDYLC9zGGoUC", ingredients: "Puff Pastry, Spinach, Feta Cheese, Garlic, Herbs" },
+                { title: "Sausage Roll", category: "Savory", price: "$4.00", desc: "Herbed pork sausage wrapped in golden, flaky puff pastry.", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCd_TmNBtFRIqwh5bh7iSlOdqRDJSGJVKP1T-3YCFoq-WnNanHo6WbBuRXRvvs8tGQSZK1dZn6I3a6iJHL4byM9r5DC26JFjA7U9s_o2o2ia367BS2gVpc2LHYMwm5e_UPo_r_GPIZKyQHnoR8vXlbdPWdS5z5SZxXQd68-5uWq1QMGTj01wNIGMZG1jB4PPdc9XAUU0ZRvEHw44Sdxiw4c5TdmJpuXivg3eodT1I-xcIyM6u9Br9l8Z00zpX_O4pUx_7yGlsf2Knwr", ingredients: "Pork Sausage, Fennel, Puff Pastry, Egg Wash" },
+                { title: "Quiche Lorraine", category: "Savory", price: "$6.00", desc: "Classic French tart with bacon, egg custard, and gruyere cheese.", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBO0ZKFr0Vq3u2qIGbwTklVk1NRf5LudR3o-9VQzWsVuBWiMBm3gxTiHb7qBh3fYEk0cekwvM0yU9p15-SjoL5kWnxf9mWHV_5_ZsKyOsTlIJOJb_pOnEf4EfjaMOCSP9Tc4-jCtBART-M6O0BPS3TdgOAMoa9e2TH5TVRHZXhD8zWBsvjqg0_T7ylozMovy05X9SAfSvH6TlwHSA4bdT0PmjMrzw3T37Zh7kynz6ox1Xp0FwJrkOXYmvuQBHfAO9m9x-S4TWUZZ3th", ingredients: "Eggs, Cream, Bacon, Gruyere, Pie Crust" },
+                { title: "French Baguette", category: "Bread", price: "$3.00", desc: "Traditional long thin loaf with a crisp crust and chewy texture.", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuB3ePjwRPlUyPcBB-gEiNv8MkH16tu35a6aB6_9Zj6vvtAjNzfpPl3j9BZxEiFIodTQCe9Zyw5LOmhozbuIXP9okz3ngRIWl4rKMS0SKUkOmK6mttKGX1C0orlgu70xhnIsPKsKFQHKXqBCEG3fDWZZyFyXYR9JfQecs2L1EYLc-A8kNIM_-KsioMgNvsvR0T2bdRbRNnU00mKgnsB7VshRYE5j0sjBCg60QWs45waEvck39YPu_VtdDweJzzP-3pE_auMe0BbiyI3c", ingredients: "Wheat Flour, Water, Salt, Yeast" },
+            ];
+
+            const displayedItems = activeCategory === 'All' ? menuItems : menuItems.filter(item => item.category === activeCategory);
+
+            return (
+                <div className="bg-background-light dark:bg-background-dark overflow-x-hidden">
+                    {/* @ai-section: Cinematic Hero  parallax background image with gradient overlay */}
+                    <header className="relative w-full h-[85vh] overflow-hidden flex items-center justify-center bg-stone-900">
+                        <div className="absolute inset-0 z-0">
+                            <motion.img style={{ y: yParallax }} alt="Baker dusting flour on dough" className="w-full h-full object-cover opacity-60" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6SG_V94G3jAOPP14HMgaAc2y6fE1y54l-T9C_E8xI1lee7tUiF_qJrO8kXpExWPXmuyi8aqoigi93IDoakFe7g9F7qjyPpIDuf5zvLq-T9HQck89ar2rvOtJOWbapiebrimVajx_o7xAq0UfknDkv0sjaGWYqUmPn7GOzTdfsSZqTNiJPRV2YdCQ87VO5yahIhmngNShbsfl5AgO4_w5JoN1TT8lQmCaRisnMIBX9YW4YySXwnKh-Uwv2ioOH1i39jT1EUr1eVcIX" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-stone-900 via-stone-900/40 to-transparent"></div>
+                        </div>
+                        <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
+                            <motion.span initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="inline-block py-1 px-3 border border-white/30 rounded-full text-white/80 text-xs font-serif italic mb-6 backdrop-blur-sm">Est. 2024</motion.span>
+                            <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="font-serif text-5xl md:text-7xl lg:text-8xl text-white font-bold leading-tight mb-6 drop-shadow-xl">Jos's Morning <span className="text-primary italic">Ritual</span>.</motion.h1>
+                            <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="font-display text-lg md:text-xl text-stone-200 font-light tracking-wide mb-10 max-w-xl mx-auto">Hot, fresh, and ready by 7:00 AM. Hand-kneaded dough, patience, and the warmth of a real fire.</motion.p>
+                            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                                <button className="bg-white text-stone-900 hover:bg-stone-100 font-medium py-3 px-8 rounded-full transition-colors transform active:scale-95">Order Pickup</button>
+                                <button className="border border-white/40 text-white hover:bg-white/10 backdrop-blur-sm font-medium py-3 px-8 rounded-full transition-colors flex items-center justify-center gap-2 transform active:scale-95"><span className="material-icons text-sm">play_circle</span> Watch the Process</button>
+                            </div>
+                        </div>
+                        {/* @ai-section: Live marquee ticker  continuous scroll of fresh item alerts */}
+                        <div className="absolute bottom-0 w-full bg-primary text-white py-3 overflow-hidden border-t border-white/10 z-20">
+                            <div className="flex animate-marquee whitespace-nowrap">
+                                <span className="mx-8 font-medium tracking-wider flex items-center gap-2"><span className="w-2 h-2 bg-white rounded-full animate-pulse"></span> FRESH OUT NOW: SOURDOUGH LOAVES (9 LEFT)</span>
+                                <span className="mx-8 font-medium tracking-wider opacity-80">&bull;</span>
+                                <span className="mx-8 font-medium tracking-wider flex items-center gap-2">CINNAMON ROLLS (FRESH TRAY)</span>
+                                <span className="mx-8 font-medium tracking-wider opacity-80">&bull;</span>
+                                <span className="mx-8 font-medium tracking-wider flex items-center gap-2">OLIVE FOCACCIA (SELLING FAST)</span>
+                                <span className="mx-8 font-medium tracking-wider opacity-80">&bull;</span>
+                                <span className="mx-8 font-medium tracking-wider flex items-center gap-2">CRUSTY BAGUETTES (JUST BAKED)</span>
+                                <span className="mx-8 font-medium tracking-wider opacity-80">&bull;</span>
+                                <span className="mx-8 font-medium tracking-wider flex items-center gap-2"><span className="w-2 h-2 bg-white rounded-full animate-pulse"></span> FRESH OUT NOW: SOURDOUGH LOAVES (9 LEFT)</span>
+                            </div>
+                        </div>
+                    </header>
+
+                    {/* @ai-section: Macro Ingredient Spotlight  dark section with spinning circles and centered image */}
+                    <section className="py-24 bg-stone-900 relative overflow-hidden">
+                        <div className="max-w-7xl mx-auto px-4 grid md:grid-cols-2 gap-16 items-center">
+                            <motion.div initial={{ opacity: 0, x: -50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="space-y-8">
+                                <span className="text-primary font-bold uppercase tracking-widest text-xs border-b border-primary/30 pb-1">The Essence</span>
+                                <h2 className="font-serif text-5xl text-white leading-tight">Grown in Jos, <br /> Perfected in <span className="text-primary italic">Fire.</span></h2>
+                                <p className="text-stone-400 text-lg font-light leading-relaxed">Our flour isn't just an ingredient; it's a legacy. Sourced directly from family-run farms in the Plateau, we use 100% organic heritage grains.</p>
+                                <div className="flex gap-12">
+                                    <div className="text-center"><span className="block text-4xl font-bold text-white mb-2 font-serif italic">0%</span><span className="text-[10px] uppercase tracking-widest text-stone-500">Additives</span></div>
+                                    <div className="text-center"><span className="block text-4xl font-bold text-white mb-2 font-serif italic">100%</span><span className="text-[10px] uppercase tracking-widest text-stone-500">Love</span></div>
+                                </div>
+                            </motion.div>
+                            <motion.div initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} className="relative">
+                                <div className="aspect-square rounded-full border-2 border-primary/20 p-8 flex items-center justify-center animate-[spin_20s_linear_infinite]">
+                                    <div className="w-full h-full rounded-full border border-primary/40 p-12"></div>
+                                </div>
+                                <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDYvf77WkTzo48ZPbJwUbQetCY5GnPm0VNmBHX0NT52ceOmSMsQZHiYsq9NcCufvHkW87mOr6Z7DTgftYf8q1h6AHQM8XNZeZnPrLJoJNhWZvwsRgqxS8vOeeR2JCDpJoMJqdY6l7G-xynMPgrNZX3i-mBcBfzq3YlV640wg5x5BjcnS_G_UbOryxsD1iSmAv08WogejIlucFklzxkv2CI0kfa_ilSMPwqWo6-tr1Z6Wd7aoOqW5gpClZIalrlkkyU4U9a7i9ViNPEd" className="absolute inset-0 m-auto w-3/4 h-3/4 object-cover rounded-full shadow-2xl border-4 border-stone-900" alt="Artisan Grain" />
+                            </motion.div>
+                        </div>
+                    </section>
+
+                    {/* @ai-section: Daily Menu  category filter buttons + masonry grid of MenuItem cards */}
+                    <section className="py-20 bg-background-light dark:bg-background-dark relative" id="menu">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+                                <div>
+                                    <h2 className="font-serif text-4xl text-text-coffee dark:text-white font-bold mb-2">Daily Selection</h2>
+                                    <p className="text-stone-500 dark:text-stone-400 max-w-md">Our menu changes daily based on seasonal ingredients and our baker's inspiration.</p>
+                                </div>
+                                <div className="bg-white dark:bg-stone-800 p-1.5 rounded-full shadow-sm border border-stone-200 dark:border-stone-700 flex">
+                                    {categories.map((cat) => (
+                                        <button key={cat} onClick={() => setActiveCategory(cat)} className={`px-6 py-2 rounded-full text-sm font-medium transition-all ${activeCategory === cat ? 'bg-stone-900 text-white shadow-md' : 'text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-700'}`}>{cat}</button>
+                                    ))}
+                                </div>
+                            </div>
+                            <div className="masonry-grid">
+                                {displayedItems.map((item, index) => (<MenuItem key={index} title={item.title} price={item.price} desc={item.desc} image={item.image} ingredients={item.ingredients} />))}
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* @ai-section: Sensory Journey  parallax image with glassmorphism card */}
+                    <section className="relative h-screen flex items-center bg-background-dark py-32 overflow-hidden">
+                        <div className="absolute top-0 right-0 w-1/2 h-full opacity-30">
+                            <motion.img initial={{ scale: 1.2, x: 100 }} whileInView={{ scale: 1, x: 0 }} transition={{ duration: 2 }} src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmprho5MDhuLhOfVgQEqJ-MUQ5tryytP6ON6i2vb0Yoas281JrIx5dNJAucfKXPOOFFUgNLyIFF4GZuXazlicapLXhwWNXITxICQlPYIF5qZZniDLtCUMgTKpW_oYroBsTc7QQXHjG5DrZB2-GZhlhc50WljO155_6CVN9WtYDkI7vb0cr3eUJuULhifa5fu8oEtvjoUZQZig2wEWyhSS28U56WA_hXDK5WNWmWJpkPusDA0D68wwI5alXHGVzZnbZty1Hr66H0pYU" className="w-full h-full object-cover" alt="Wheat details" />
+                        </div>
+                        <div className="max-w-7xl mx-auto px-4 relative z-10">
+                            <motion.div initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="max-w-2xl bg-stone-900/80 backdrop-blur-xl p-12 rounded-[3rem] border border-white/5 shadow-2xl">
+                                <h3 className="font-serif text-5xl text-white mb-6">A Sensory <br /> <span className="text-primary italic">Journey.</span></h3>
+                                <p className="text-stone-300 text-lg font-light leading-relaxed mb-8">Close your eyes. Hear the crackle of the crust as it cools. Inhale the deep, toasted aroma of 48-hour fermented dough.</p>
+                                <div className="space-y-6">
+                                    <SensoryItem icon="hearing" text="The Crackle of Excellence" />
+                                    <SensoryItem icon="air" text="The Aroma of Tradition" />
+                                    <SensoryItem icon="touch_app" text="The Texture of Hand-Kneaded Quality" />
+                                </div>
+                            </motion.div>
+                        </div>
+                    </section>
+
+                    {/* @ai-section: 3D Cake Showcase  rotating cake image with feature list */}
+                    <section className="py-20 bg-stone-100 dark:bg-stone-900 border-t border-stone-200 dark:border-stone-800" id="custom-cakes">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                                <div className="relative w-full aspect-square bg-gradient-to-br from-white to-stone-200 dark:from-stone-800 dark:to-stone-900 rounded-2xl shadow-inner flex items-center justify-center group cursor-grab active:cursor-grabbing overflow-hidden border border-stone-200 dark:border-stone-700">
+                                    <div className="relative z-10 w-3/4 h-3/4"><img alt="3D Model of Raspberry Velvet Cake" className="w-full h-full object-contain drop-shadow-2xl cake-spin transition-transform" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBO0ZKFr0Vq3u2qIGbwTklVk1NRf5LudR3o-9VQzWsVuBWiMBm3gxTiHb7qBh3fYEk0cekwvM0yU9p15-SjoL5kWnxf9mWHV_5_ZsKyOsTlIJOJb_pOnEf4EfjaMOCSP9Tc4-jCtBART-M6O0BPS3TdgOAMoa9e2TH5TVRHZXhD8zWBsvjqg0_T7ylozMovy05X9SAfSvH6TlwHSA4bdT0PmjMrzw3T37Zh7kynz6ox1Xp0FwJrkOXYmvuQBHfAO9m9x-S4TWUZZ3th" /></div>
+                                    <div className="absolute top-6 left-6 bg-stone-900 text-white text-xs font-bold px-3 py-1.5 rounded uppercase tracking-wider shadow-lg flex items-center gap-2"><span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span> Live 3D Preview</div>
+                                </div>
+                                <div>
+                                    <span className="text-primary font-bold uppercase tracking-widest text-sm mb-2 block">Cake of the Week</span>
+                                    <h2 className="font-serif text-5xl text-text-coffee dark:text-white font-bold mb-6">The Raspberry Velvet</h2>
+                                    <p className="text-stone-600 dark:text-stone-300 text-lg mb-8 leading-relaxed">An architectural marvel of taste. Four layers of rich red velvet sponge, separated by white chocolate ganache and fresh raspberry coulis.</p>
+                                    <div className="space-y-4 mb-10">
+                                        <FeatureItem icon="cake" title="Customizable Inscription" desc="Add your personal message in chocolate." />
+                                        <FeatureItem icon="local_shipping" title="24h Delivery" desc="Order by 2PM for next-day celebration." />
+                                    </div>
+                                    <div className="flex flex-col sm:flex-row gap-4">
+                                        <button className="bg-primary hover:bg-orange-600 text-white font-bold py-4 px-8 rounded-lg shadow-lg shadow-orange-500/30 transition-all flex items-center justify-center gap-2">Customize &amp; Order <span className="bg-white/20 px-2 py-0.5 rounded text-sm">$65.00</span></button>
+                                        <button className="border border-stone-300 dark:border-stone-600 hover:bg-stone-100 dark:hover:bg-stone-800 text-text-coffee dark:text-white font-medium py-4 px-8 rounded-lg transition-all">View All Cakes</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* @ai-section: Perfect Morning Pairing  3 cards with hover lift */}
+                    <section className="py-32 bg-background-light dark:bg-background-dark">
+                        <div className="max-w-7xl mx-auto px-4">
+                            <div className="text-center mb-20">
+                                <h2 className="font-serif text-5xl dark:text-white mb-4">The Perfect Pairing</h2>
+                                <p className="text-stone-500 max-w-xl mx-auto italic">Crafted to complement our loaves. Explore the synergy of flavor.</p>
+                            </div>
+                            <div className="grid md:grid-cols-3 gap-12">
+                                <PairingCard title="Espresso &amp; Sourdough" desc="The bright acidity of our African roast balances the deep malty crust of our rustic sourdough." image="https://lh3.googleusercontent.com/aida-public/AB6AXuD9AdQcTD0npuPqeB1MkUOpzNcQ_bmlr55FObJd7BiXSrLsv21dC8nYt7TMtdWa9rUF2xR7Dv7ZjA8VTXqcWt961UQEfZIsle-QgyvY-W_l2FdtGhXgDxcPC7BVvYBlihw6uwo8qGfPj1HFG0LUTU-6-xUllZRQ_sNuGDnDR1ndaGj4QlDrwzLDNnx8NFDEk9xAUKMJzSBMJ4EdWxutNIiONZeeTQDLxyIdSsUImu6287f0OhweUM6HW_lF5K8CBEnwGxwdvygXaPFT" />
+                                <PairingCard title="Matcha &amp; Croissant" desc="Earthiness meets buttery layers. Our organic ceremonial matcha brings out the creaminess of the French butter." image="https://lh3.googleusercontent.com/aida-public/AB6AXuCd_TmNBtFRIqwh5bh7iSlOdqRDJSGJVKP1T-3YCFoq-WnNanHo6WbBuRXRvvs8tGQSZK1dZn6I3a6iJHL4byM9r5DC26JFjA7U9s_o2o2ia367BS2gVpc2LHYMwm5e_UPo_r_GPIZKyQHnoR8vXlbdPWdS5z5SZxXQd68-5uWq1QMGTj01wNIGMZG1jB4PPdc9XAUU0ZRvEHw44Sdxiw4c5TdmJpuXivg3eodT1I-xcIyM6u9Br9l8Z00zpX_O4pUx_7yGlsf2Knwr" />
+                                <PairingCard title="Cold Brew &amp; Brioche" desc="Smooth, low-acid cold brew cuts through the decadent richness of our glazed brioche buns." image="https://lh3.googleusercontent.com/aida-public/AB6AXuCd_TmNBtFRIqwh5bh7iSlOdqRDJSGJVKP1T-3YCFoq-WnNanHo6WbBuRXRvvs8tGQSZK1dZn6I3a6iJHL4byM9r5DC26JFjA7U9s_o2o2ia367BS2gVpc2LHYMwm5e_UPo_r_GPIZKyQHnoR8vXlbdPWdS5z5SZxXQd68-5uWq1QMGTj01wNIGMZG1jB4PPdc9XAUU0ZRvEHw44Sdxiw4c5TdmJpuXivg3eodT1I-xcIyM6u9Br9l8Z00zpX_O4pUx_7yGlsf2Knwr" />
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* @ai-section: Catering & Bulk  3 cards on dark background */}
+                    <section className="relative py-24 bg-coffee-dark text-white overflow-hidden" id="bulk">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                            <div className="text-center max-w-3xl mx-auto mb-16">
+                                <h2 className="font-serif text-4xl font-bold mb-4">Catering &amp; Bulk Orders</h2>
+                                <p className="text-stone-400 text-lg">Planning an event? Let us bring the warmth of the bakery to your office, wedding, or party.</p>
+                            </div>
+                            <div className="grid md:grid-cols-3 gap-8 text-center">
+                                <BulkCard icon="business" title="Corporate" desc="Morning pastry boxes and coffee travelers for the whole team." />
+                                <BulkCard icon="celebration" title="Events" desc="Custom dessert tables and tiered cakes for special moments." />
+                                <BulkCard icon="local_shipping" title="Wholesale" desc="Partner with us to serve Orient Bakery goods in your cafe." />
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* @ai-section: Local Roots & Community  2-col with staggered images */}
+                    <section className="py-24 bg-stone-50 dark:bg-stone-900 border-t border-stone-200 dark:border-stone-800">
+                        <div className="max-w-7xl mx-auto px-4 grid lg:grid-cols-2 gap-20 items-center">
+                            <motion.div initial={{ opacity: 0, x: -50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="order-2 lg:order-1">
+                                <div className="grid grid-cols-2 gap-4">
+                                    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAnDkmQLViId92Xb5EIwK923g9s4vEyP7kRlaoy-PSt-Q5O0XHMLFkbPtmcHArRNuxNfF0tn5WpSr4cadPNsC7b9MCBCn1LdhvH_CGIUR-ktHXG4FsOH1apFckqn7x4tnXxB0QVPJDycxVhTK2kWSOBdfFrldA95svT7P3iGydLOAxlyeiM07nPh86t_cM1naYI95F7GOQFfRaCn9oTK5SHmBnOS5QQKAPj7G81IFRGKK6nMwwdbaX0m0WZrSvRW8-rJDYLC9zGGoUC" className="w-full h-64 object-cover rounded-[2rem] shadow-xl" alt="Local farm" />
+                                    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuA8jmr4oztTQ8QwKXjjb4cQPlKaOB4R-eWMBq8_Csa1ENWeji-HcmhbUesMcE8hbj-0Ax3JZhTLc0GyCOeRcwrbYzTViEqywn3R_2-SthdRopZVMVTNZ1WqnQBr8-LK7OnNKYx4rWuj8_szD_q6-mKdt56d1BeZHSURh5EXpjkKwfe7LNALEI6xpoF0MENRWl-MIwX0My0xHjChEy7JhmtHGr-AYk4l1f6dCEOxq-0Ep04yKLYygUtXUhb5RozBayayNVk-Lug0tPjj" className="w-full h-64 object-cover rounded-[2rem] shadow-xl mt-12" alt="Artisan hands" />
+                                </div>
+                            </motion.div>
+                            <motion.div initial={{ opacity: 0, x: 50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="order-1 lg:order-2 space-y-8">
+                                <h2 className="font-serif text-5xl dark:text-white leading-tight">Grown in Jos, <br /> Fed by <span className="text-primary italic">Community.</span></h2>
+                                <p className="text-stone-500 text-lg leading-relaxed">We aren't just a bakery; we are a hub for local agriculture. Every loaf purchased supports the growth of our beautiful state.</p>
+                                <div className="flex gap-4">
+                                    <button className="px-8 py-3 bg-stone-900 dark:bg-white text-white dark:text-stone-900 rounded-full font-bold text-sm hover:opacity-80 transition-all">Meet Our Farmers</button>
+                                    <button className="px-8 py-3 border border-stone-300 rounded-full font-bold text-sm hover:bg-stone-100 transition-all dark:text-white">Our Impact</button>
+                                </div>
+                            </motion.div>
+                        </div>
+                    </section>
+
+                    {/* @ai-section: AI Chat Assistant floating widget */}
+                    <div className="fixed bottom-6 right-6 z-50 group">
+                        <div className="absolute bottom-16 right-0 w-72 bg-white dark:bg-stone-800 rounded-2xl shadow-2xl border border-stone-200 dark:border-stone-700 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-300 pointer-events-none group-hover:pointer-events-auto origin-bottom-right">
+                            <div className="p-4 bg-primary text-white rounded-t-2xl flex justify-between items-center"><span className="font-bold">Mama Bakery</span><span className="text-xs bg-white/20 px-2 py-0.5 rounded">Online</span></div>
+                            <div className="p-4 h-64 overflow-y-auto bg-stone-50 dark:bg-stone-900/50">
+                                <div className="flex gap-2 mb-4">
+                                    <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0"><span className="material-icons text-primary text-sm">smart_toy</span></div>
+                                    <div className="bg-white dark:bg-stone-800 p-3 rounded-tr-xl rounded-br-xl rounded-bl-xl text-sm shadow-sm border border-stone-100 dark:border-stone-700 text-text-coffee dark:text-stone-300">Hello dear! Looking for something sweet or savory today? The focaccia just came out of the oven!</div>
+                                </div>
+                            </div>
+                            <div className="p-3 border-t border-stone-200 dark:border-stone-700"><input className="w-full text-sm border-none bg-stone-100 dark:bg-stone-900 rounded-lg px-3 py-2 focus:ring-1 focus:ring-primary outline-none text-text-coffee dark:text-white" placeholder="Ask Mama..." type="text" /></div>
+                        </div>
+                        <button className="bg-primary hover:bg-orange-600 text-white w-14 h-14 rounded-full shadow-lg shadow-orange-500/40 flex items-center justify-center transition-transform hover:scale-110 relative">
+                            <span className="material-icons text-2xl">support_agent</span>
+                            <span className="absolute top-0 right-0 w-3.5 h-3.5 bg-green-500 border-2 border-white dark:border-stone-900 rounded-full"></span>
+                        </button>
+                    </div>
+                </div>
+            );
+        };
+
+        /* ================================================================
+         * SECTION 6: ARCHITECT PAGE (Cake Configurator)
+         * @ai-context: 4-step wizard for customizing a cake order.
+         *   Step 1: Select tier (1/2/3)
+         *   Step 2: Choose flavor (Vanilla/Chocolate/Red Velvet/Lemon)
+         *   Step 3: Pick frosting style (Buttercream/Fondant/Naked)
+         *   Step 4: Add toppings (Berries/Flowers/Gold Leaf/Topper)
+         * @ai-data-flow: useState for step number and config object.
+         *   Left panel shows live cake preview with emoji overlays.
+         *   Right panel shows the configurator form.
+         * ================================================================ */
+
+        const IconButton = ({ icon }) => (
+            <button className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-md p-3 rounded-lg hover:bg-white transition-colors shadow-sm">
+                <span className="material-icons-outlined text-gray-600 dark:text-gray-300">{icon}</span>
+            </button>
+        );
+
+        const CompletedStep = ({ title, value, onEdit }) => (
+            <div className="opacity-60 hover:opacity-100 transition-opacity">
+                <div className="flex justify-between items-center mb-1">
+                    <h3 className="text-xs font-bold flex items-center gap-2 text-gray-800 dark:text-gray-200 uppercase tracking-wider">
+                        <span className="w-4 h-4 rounded-full bg-green-500 text-white flex items-center justify-center text-[10px]"><span className="material-icons text-[10px]">check</span></span>{title}
+                    </h3>
+                    <button onClick={onEdit} className="text-xs text-primary underline hover:text-orange-600">Edit</button>
+                </div>
+                <div className="pl-6"><p className="text-sm font-semibold text-gray-900 dark:text-white">{value}</p></div>
+            </div>
+        );
+
+        const Architect = () => {
+            const [step, setStep] = useState(1);
+            const [config, setConfig] = useState({ tier: 2, flavor: 'Vanilla', frosting: 'Buttercream', toppings: [] });
+
+            const tierOptions = [
+                { value: 1, label: 'Single Tier', price: 40, desc: 'Serves 10-15' },
+                { value: 2, label: 'Double Tier', price: 65, desc: 'Serves 25-30' },
+                { value: 3, label: 'Grand Tier', price: 95, desc: 'Serves 50+' },
+            ];
+            const flavorOptions = [
+                { name: 'Vanilla', color: 'none', filter: 'brightness(105%) sepia(20%)', desc: 'Madagascar Bean' },
+                { name: 'Chocolate', color: '#5D4037', filter: 'brightness(60%) sepia(80%) hue-rotate(340deg) saturate(150%)', desc: 'Belgian Dark' },
+                { name: 'Red Velvet', color: '#C62828', filter: 'brightness(80%) sepia(50%) hue-rotate(310deg) saturate(250%)', desc: 'Classic Southern' },
+                { name: 'Lemon', color: '#FBC02D', filter: 'brightness(100%) sepia(100%) hue-rotate(10deg) saturate(150%)', desc: 'Zesty Citrus' },
+            ];
+            const frostingOptions = [
+                { name: 'Buttercream', desc: 'Classic texture', icon: 'blur_on' },
+                { name: 'Fondant', desc: 'Smooth finish', icon: 'lens' },
+                { name: 'Naked', desc: 'Exposed layers', icon: 'texture' },
+            ];
+            const toppingOptions = [
+                { name: 'Berries', icon: '\u{1F353}', price: 5 },
+                { name: 'Flowers', icon: '\u{1F338}', price: 8 },
+                { name: 'Gold Leaf', icon: '\u{2728}', price: 12 },
+                { name: 'Topper', icon: '\u{1F382}', price: 10 },
+            ];
+
+            const handleToppingToggle = (name) => {
+                setConfig(prev => {
+                    const exists = prev.toppings.includes(name);
+                    return { ...prev, toppings: exists ? prev.toppings.filter(t => t !== name) : [...prev.toppings, name] };
+                });
+            };
+            const calculateTotal = () => {
+                const tierPrice = tierOptions.find(t => t.value === config.tier)?.price || 0;
+                const toppingsPrice = config.toppings.reduce((acc, curr) => { const top = toppingOptions.find(t => t.name === curr); return acc + (top?.price || 0); }, 0);
+                return tierPrice + toppingsPrice;
+            };
+            const currentFlavor = flavorOptions.find(f => f.name === config.flavor);
+            const nextStep = () => setStep(prev => Math.min(prev + 1, 4));
+            const prevStep = () => setStep(prev => Math.max(prev - 1, 1));
+            const jumpToStep = (s) => setStep(s);
+
+            return (
+                <div className="h-[calc(100vh-80px)] flex overflow-hidden bg-background-light dark:bg-background-dark">
+                    {/* Left Panel: Cake Preview */}
+                    <section className="relative flex-grow h-full bg-[#f1f5f9] dark:bg-[#0f172a] flex items-center justify-center overflow-hidden group">
+                        <div className="relative w-full h-full flex items-center justify-center">
+                            <AnimatePresence mode='wait'>
+                                <motion.div key={config.tier + config.flavor} initial={{ scale: 0.9, opacity: 0.8 }} animate={{ scale: config.tier === 1 ? 0.8 : config.tier === 2 ? 1 : 1.2, opacity: 1 }} transition={{ type: "spring", stiffness: 100 }} className="relative w-full h-full flex items-center justify-center">
+                                    <img alt="3D Cake Render" className="max-h-[70%] max-w-[80%] object-contain drop-shadow-2xl transition-all duration-700" style={{ filter: currentFlavor?.filter || 'none', opacity: config.frosting === 'Naked' ? 0.9 : 1 }} src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjgjqXBUvUI7yxu18cPbEjS1s8IUe5XW_xHaLIr4rMKNABX4YLBU9wyfc9jzXS_72wgh3LEygdAFzWawbgEYl9l56K5jKVevcNj53uFFdozb_fX16MgMXoIUZwbAjcZ3acr816xSDxII3_ETinK7g6fECd9YjnMfzQOZ4a8ETC6ChJfm8vduGzxVmlbogc-Ye-GLnhimriXR1UlqtxeG2ghiYRw2UzyO00cHNlhx7xCNIn_hZyFk9W98hl0w4wRUCjriyWFFU4ZMIa" />
+                                    <div className="absolute inset-0 pointer-events-none">
+                                        {config.toppings.includes('Berries') && <><span className="absolute top-[35%] left-[45%] text-4xl animate-bounce" style={{ animationDuration: '3s' }}>{'\u{1F353}'}</span><span className="absolute top-[40%] right-[42%] text-3xl animate-bounce" style={{ animationDuration: '4s' }}>{'\u{1F353}'}</span></>}
+                                        {config.toppings.includes('Flowers') && <><span className="absolute top-[30%] right-[45%] text-4xl animate-pulse">{'\u{1F338}'}</span><span className="absolute top-[50%] left-[40%] text-3xl">{'\u{1F33A}'}</span></>}
+                                        {config.toppings.includes('Gold Leaf') && <div className="absolute inset-0 flex items-center justify-center"><span className="absolute top-[32%] text-4xl animate-pulse text-yellow-400 opacity-60">{'\u{2728}'}</span></div>}
+                                        {config.toppings.includes('Topper') && <span className="absolute top-[15%] left-[50%] transform -translate-x-1/2 text-6xl drop-shadow-lg">{'\u{1F382}'}</span>}
+                                    </div>
+                                </motion.div>
+                            </AnimatePresence>
+                        </div>
+                        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-white/70 dark:bg-gray-800/70 backdrop-blur-md rounded-full px-6 py-3 flex items-center gap-4 shadow-lg">
+                            <button className="p-2 hover:bg-primary/10 rounded-full transition-colors"><span className="material-icons">rotate_left</span></button>
+                            <div className="w-px h-4 bg-gray-300 dark:bg-gray-600"></div>
+                            <span className="text-xs font-bold text-gray-500">100%</span>
+                            <div className="w-px h-4 bg-gray-300 dark:bg-gray-600"></div>
+                            <button className="p-2 hover:bg-primary/10 rounded-full transition-colors"><span className="material-icons">rotate_right</span></button>
+                        </div>
+                        <div className="absolute top-6 right-6 flex flex-col gap-2"><IconButton icon="wb_sunny" /><IconButton icon="grid_4x4" /><IconButton icon="fullscreen" /></div>
+                    </section>
+
+                    {/* Right Panel: Configurator */}
+                    <aside className="w-[450px] flex-none bg-white dark:bg-coffee-dark border-l border-gray-200 dark:border-white/10 flex flex-col shadow-2xl relative z-10">
+                        <div className="px-6 py-6 border-b border-gray-100 dark:border-white/5">
+                            <div className="flex justify-between items-center mb-2"><span className="text-xs font-bold text-primary uppercase tracking-wider">Step {step} of 4</span><span className="text-xs text-gray-400 font-mono">ID: #CA-8921</span></div>
+                            <div className="h-1.5 w-full bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden"><motion.div initial={{ width: 0 }} animate={{ width: `${(step / 4) * 100}%` }} className="h-full bg-primary rounded-full transition-all duration-500"></motion.div></div>
+                            <div className="flex justify-between mt-2 text-[10px] font-medium text-gray-400">
+                                <span className={step >= 1 ? 'text-primary' : ''}>Base</span><span className={step >= 2 ? 'text-primary' : ''}>Flavor</span><span className={step >= 3 ? 'text-primary' : ''}>Frosting</span><span className={step >= 4 ? 'text-primary' : ''}>Accents</span>
+                            </div>
+                        </div>
+                        <div className="flex-grow overflow-y-auto no-scrollbar px-6 py-8 space-y-6">
+                            {step === 1 && (<motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}><h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6 font-display">Select Size &amp; Tier</h3><div className="space-y-3">{tierOptions.map((tier) => (<button key={tier.value} onClick={() => setConfig({ ...config, tier: tier.value })} className={`w-full p-4 rounded-xl border-2 text-left flex justify-between items-center transition-all ${config.tier === tier.value ? 'border-primary bg-primary/5 dark:bg-primary/10' : 'border-gray-200 dark:border-gray-700 hover:border-primary/50'}`}><div><span className="block font-bold text-gray-800 dark:text-white">{tier.label}</span><span className="text-xs text-gray-500">{tier.desc}</span></div><span className="font-bold text-primary">${tier.price}</span></button>))}</div></motion.div>)}
+                            {step === 2 && (<motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}><h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6 font-display">Choose Flavor Profile</h3><div className="grid grid-cols-2 gap-3">{flavorOptions.map((flavor) => (<button key={flavor.name} onClick={() => setConfig({ ...config, flavor: flavor.name })} className={`p-4 rounded-xl border-2 text-left transition-all ${config.flavor === flavor.name ? 'border-primary bg-primary/5' : 'border-gray-200 dark:border-gray-700 hover:border-primary/50'}`}><div className="w-8 h-8 rounded-full mb-3 border border-black/10 shadow-sm" style={{ backgroundColor: flavor.color === 'none' ? '#fdf5e6' : flavor.color }}></div><span className="block font-bold text-sm text-gray-900 dark:text-white">{flavor.name}</span><span className="text-xs text-gray-500">{flavor.desc}</span></button>))}</div></motion.div>)}
+                            {step === 3 && (<motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}><h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6 font-display">Frosting Style</h3><div className="space-y-3">{frostingOptions.map((opt) => (<button key={opt.name} onClick={() => setConfig({ ...config, frosting: opt.name })} className={`w-full p-4 rounded-xl border-2 flex items-center gap-4 transition-all ${config.frosting === opt.name ? 'border-primary bg-primary/5 dark:bg-primary/10' : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-primary/50'}`}><div className={`w-10 h-10 rounded-full flex items-center justify-center ${config.frosting === opt.name ? 'bg-white dark:bg-gray-800 shadow-sm' : 'bg-gray-100 dark:bg-gray-700'}`}><span className={`material-icons ${config.frosting === opt.name ? 'text-primary' : 'text-gray-400'}`}>{opt.icon}</span></div><div className="text-left"><span className="block font-bold text-sm text-gray-900 dark:text-white">{opt.name}</span><span className="block text-xs text-gray-500">{opt.desc}</span></div></button>))}</div></motion.div>)}
+                            {step === 4 && (<motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}><h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6 font-display">Add Final Touches</h3><div className="grid grid-cols-2 gap-3">{toppingOptions.map((top) => (<button key={top.name} onClick={() => handleToppingToggle(top.name)} className={`p-4 rounded-xl border-2 text-center transition-all relative ${config.toppings.includes(top.name) ? 'border-primary bg-primary/5' : 'border-gray-200 dark:border-gray-700 hover:border-primary/50'}`}><div className="text-3xl mb-2">{top.icon}</div><span className="block font-bold text-sm text-gray-900 dark:text-white">{top.name}</span><span className="text-xs text-primary font-bold">+${top.price}</span>{config.toppings.includes(top.name) && (<div className="absolute top-2 right-2 w-5 h-5 bg-primary rounded-full text-white flex items-center justify-center"><span className="material-icons text-[14px]">check</span></div>)}</button>))}</div></motion.div>)}
+                            <div className="mt-8 pt-8 border-t border-gray-100 dark:border-white/5 space-y-4">
+                                {step > 1 && <CompletedStep number={1} title="Size" value={tierOptions.find(t => t.value === config.tier)?.label || ''} onEdit={() => jumpToStep(1)} />}
+                                {step > 2 && <CompletedStep number={2} title="Flavor" value={config.flavor} onEdit={() => jumpToStep(2)} />}
+                                {step > 3 && <CompletedStep number={3} title="Frosting" value={config.frosting} onEdit={() => jumpToStep(3)} />}
+                            </div>
+                        </div>
+                        <div className="p-6 bg-white dark:bg-coffee-dark border-t border-gray-200 dark:border-white/10 shadow-lg">
+                            <div className="flex justify-between items-end mb-6">
+                                <div><p className="text-xs text-gray-500 uppercase font-semibold">Estimated Total</p><p className="text-3xl font-bold text-gray-900 dark:text-white font-display">${calculateTotal().toFixed(2)}</p></div>
+                                <div className="text-right"><p className="text-xs text-green-600 flex items-center justify-end gap-1"><span className="material-icons text-[14px]">local_shipping</span> Free delivery</p></div>
+                            </div>
+                            <div className="grid grid-cols-4 gap-3">
+                                {step > 1 ? (<button onClick={prevStep} className="border border-gray-200 dark:border-gray-600 rounded-lg flex items-center justify-center text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"><span className="material-icons">arrow_back</span></button>) : (<button className="border border-gray-200 dark:border-gray-600 rounded-lg flex items-center justify-center text-gray-300 cursor-not-allowed"><span className="material-icons">arrow_back</span></button>)}
+                                {step < 4 ? (<button onClick={nextStep} className="col-span-3 bg-stone-800 hover:bg-stone-900 dark:bg-white dark:text-stone-900 font-bold py-4 rounded-lg shadow-lg flex items-center justify-center gap-2 transform active:scale-95 transition-all text-white">Next Step</button>) : (<button className="col-span-3 bg-primary hover:bg-primary/90 text-white font-bold py-4 rounded-lg shadow-lg flex items-center justify-center gap-2 transform active:scale-95 transition-all"><span>Order via WhatsApp</span><span className="material-icons">send</span></button>)}
+                            </div>
+                        </div>
+                    </aside>
+                </div>
+            );
+        };
+
+        /* ================================================================
+         * SECTION 7: WHOLESALE PAGE
+         * @ai-context: B2B portal with bulk ordering table, savings calculator,
+         *   logistics map, event inquiry form, and trust pillars.
+         * @ai-data-flow: useState for units slider controlling discount tiers.
+         * ================================================================ */
+
+        const WholesaleRow = ({ sku, name, price, stock, stockColor, defaultQty, bg }) => (
+            <tr className={`hover:bg-white/5 transition-colors ${bg ? 'bg-white/[0.02]' : ''}`}>
+                <td className="px-6 py-5 font-mono text-primary text-xs">{sku}</td>
+                <td className="px-6 py-5 font-medium text-white">{name}</td>
+                <td className="px-6 py-5 text-right font-semibold text-gray-200">{price}</td>
+                <td className={`px-6 py-5 text-center font-bold ${stockColor}`}>{stock}</td>
+                <td className="px-6 py-5 text-center"><input className="w-20 bg-background-dark border border-white/10 rounded px-2 py-1 text-center text-white focus:ring-primary focus:border-primary text-sm outline-none" min="1" type="number" defaultValue={defaultQty} /></td>
+                <td className="px-6 py-5 text-right"><button className="text-primary hover:text-white transition transform active:scale-75"><span className="material-icons">add_shopping_cart</span></button></td>
+            </tr>
+        );
+        const WholesaleFeature = ({ icon, title, desc }) => (
+            <li className="flex items-start"><div className="flex-shrink-0 h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center text-primary mt-1"><span className="material-icons">{icon}</span></div><div className="ml-4"><h4 className="text-lg font-bold text-white font-display">{title}</h4><p className="text-gray-400 text-sm leading-relaxed">{desc}</p></div></li>
+        );
+        const WholesaleFormField = ({ label, type, options, placeholder }) => (
+            <div className="space-y-2"><label className="block text-sm font-medium text-gray-300">{label}</label>
+                {type === 'select' ? (<select className="block w-full bg-background-dark border border-white/20 rounded-lg text-white py-3 px-4 focus:ring-2 focus:ring-primary focus:border-transparent outline-none appearance-none">{options?.map(opt => <option key={opt}>{opt}</option>)}</select>) : (<input type={type} placeholder={placeholder} className="block w-full bg-background-dark border border-white/20 rounded-lg text-white py-3 px-4 focus:ring-2 focus:ring-primary focus:border-transparent outline-none" />)}
+            </div>
+        );
+        const TrustPillar = ({ icon, title, desc, iconColor }) => (
+            <div className="flex flex-col items-center"><div className="h-20 w-20 rounded-full bg-white/5 flex items-center justify-center border-2 border-white/10 mb-6"><span className={`material-icons text-4xl ${iconColor}`}>{icon}</span></div><h3 className="text-xl font-bold text-white mb-2 font-display">{title}</h3><p className="text-gray-400 text-sm max-w-xs">{desc}</p></div>
+        );
+
+        const Wholesale = () => {
+            const [units, setUnits] = useState(450);
+            const basePricePerUnit = 950;
+            const baseTotal = units * basePricePerUnit;
+            const discountRate = units > 800 ? 0.20 : units > 400 ? 0.12 : 0.05;
+            const discountAmount = baseTotal * discountRate;
+            const finalTotal = baseTotal - discountAmount;
+
+            return (
+                <div className="bg-background-dark text-gray-100 font-display selection:bg-primary selection:text-white">
+                    {/* Hero */}
+                    <section className="relative h-screen min-h-[700px] flex items-center justify-center overflow-hidden">
+                        <div className="absolute inset-0 z-0"><img alt="Banquet catering setup" className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBF_lco6zprEdQlI2LmcDLCSaXVyBB8sfTNRNQBZtPsBrXL6WpfVvb_Rhvg8zDIa-fYvgnDxVUQX-66V4dPxxANmhZdEaMyMlV1R2DZ5AvRfCgjRipVcBIS0HCdHjN5qrXr4CObMPzHS9HXJQHExewlvcHHpf8PDRLfpxYmjw0LFXE-88dpfDQfpkEWHnfqTD6V9dipw-i5Jl4N7SbYSfjM_StPM4T9Y6ww6OIWhf4iWRpr7Utv6DsIBvyjVA64s7c4Ye0yc2R8DPrQ" /><div className="absolute inset-0 bg-gradient-to-t from-background-dark via-background-dark/80 to-background-dark/40"></div></div>
+                        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                            <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/20 border border-primary/30 text-primary text-xs font-bold uppercase tracking-widest mb-6"><span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span> Premium B2B Services</motion.div>
+                            <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">Feeding the Crowd <br /> with <span className="text-primary">Excellence.</span></motion.h1>
+                            <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="mt-4 max-w-2xl mx-auto text-xl text-gray-300 font-light">The trusted partner for hotels, schools, and large-scale events across Plateau State.</motion.p>
+                            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }} className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 border-t border-white/10 pt-8">
+                                <div><div className="text-3xl font-bold text-white">50k+</div><div className="text-sm text-gray-400 uppercase tracking-wide">Daily Loaves</div></div>
+                                <div><div className="text-3xl font-bold text-white">200+</div><div className="text-sm text-gray-400 uppercase tracking-wide">Corporate Partners</div></div>
+                                <div><div className="text-3xl font-bold text-white">99%</div><div className="text-sm text-gray-400 uppercase tracking-wide">On-Time Delivery</div></div>
+                                <div><div className="text-3xl font-bold text-white">Jos</div><div className="text-sm text-gray-400 uppercase tracking-wide">HQ &amp; Distribution</div></div>
+                            </motion.div>
+                        </div>
+                    </section>
+
+                    {/* Bulk Ordering Table + Calculator */}
+                    <section className="py-24 bg-background-dark relative" id="quick-order">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
+                                <div><h2 className="text-3xl md:text-4xl font-bold text-white mb-2">Bulk Ordering Portal</h2><p className="text-gray-400">Streamlined procurement for high-volume accounts.</p></div>
+                            </div>
+                            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                                <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="lg:col-span-2 bg-[#2c1f17] rounded-xl border border-white/5 overflow-hidden shadow-2xl">
+                                    <div className="overflow-x-auto no-scrollbar">
+                                        <table className="w-full text-left text-sm text-gray-400">
+                                            <thead className="bg-[#3a2a20] text-gray-200 font-bold uppercase text-xs tracking-wider"><tr><th className="px-6 py-4">Product SKU</th><th className="px-6 py-4">Item Name</th><th className="px-6 py-4 text-right">Unit Price</th><th className="px-6 py-4 text-center">In Stock</th><th className="px-6 py-4 text-center">Qty</th><th className="px-6 py-4 text-right">Action</th></tr></thead>
+                                            <tbody className="divide-y divide-white/5">
+                                                <WholesaleRow sku="OB-W-001" name="Premium Family Loaf (Sliced)" price={'\u20A6' + "1,200"} stock="High" stockColor="text-green-500" defaultQty={50} />
+                                                <WholesaleRow sku="OB-P-045" name="Meat Pie Catering Box (24pcs)" price={'\u20A6' + "12,500"} stock="Med" stockColor="text-yellow-500" defaultQty={10} bg />
+                                                <WholesaleRow sku="OB-W-003" name="Whole Wheat Healthy Loaf" price={'\u20A6' + "1,500"} stock="High" stockColor="text-green-500" defaultQty={25} />
+                                                <WholesaleRow sku="OB-D-112" name="Glazed Doughnut Tray (50pcs)" price={'\u20A6' + "8,000"} stock="High" stockColor="text-green-500" defaultQty={5} bg />
+                                                <WholesaleRow sku="OB-B-088" name="Burger Buns (Pack of 12)" price={'\u20A6' + "1,800"} stock="Low" stockColor="text-red-500" defaultQty={100} />
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </motion.div>
+                                <div className="lg:col-span-1 space-y-6">
+                                    <motion.div initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="bg-gradient-to-br from-[#2c1f17] to-[#3a2a20] p-6 rounded-xl border border-white/10 shadow-lg">
+                                        <div className="flex items-center gap-2 mb-4"><span className="material-icons text-primary">calculate</span><h3 className="text-xl font-bold text-white">Bulk Savings Calculator</h3></div>
+                                        <p className="text-sm text-gray-400 mb-6">Enter total units to see your volume discount tier.</p>
+                                        <div className="space-y-4">
+                                            <div><label className="block text-xs font-medium text-gray-400 mb-1 uppercase">Total Units</label><input className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-primary" max="1000" min="0" type="range" value={units} onChange={(e) => setUnits(parseInt(e.target.value))} /><div className="flex justify-between text-xs text-gray-500 mt-1"><span>0</span><span className="text-white font-bold">{units} Units</span><span>1000+</span></div></div>
+                                            <div className="p-4 bg-background-dark/50 rounded-lg border border-primary/20">
+                                                <div className="flex justify-between items-center mb-2 text-sm"><span className="text-gray-400">Base Price</span><span className="text-white line-through decoration-red-500">{'\u20A6'}{baseTotal.toLocaleString()}</span></div>
+                                                <div className="flex justify-between items-center mb-2 text-sm"><span className="text-primary font-bold">Tier {units > 800 ? '3' : units > 400 ? '2' : '1'} Discount ({(discountRate * 100).toFixed(0)}%)</span><span className="text-primary">-{'\u20A6'}{discountAmount.toLocaleString()}</span></div>
+                                                <div className="h-px bg-white/10 my-2"></div>
+                                                <div className="flex justify-between items-center"><span className="text-white font-bold text-lg">Est. Total</span><span className="text-white font-bold text-2xl">{'\u20A6'}{finalTotal.toLocaleString()}</span></div>
+                                            </div>
+                                            <button className="w-full py-3 bg-primary text-white font-bold rounded shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all mt-4 transform active:scale-95">Apply to Cart</button>
+                                        </div>
+                                    </motion.div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* Trust Pillars */}
+                    <section className="py-20 bg-[#2c1f17] border-t border-white/5">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+                                <TrustPillar icon="verified_user" iconColor="text-green-500" title="NAFDAC Certified" desc="Fully compliant with all national food safety regulations." />
+                                <div className="flex flex-col items-center">
+                                    <div className="h-24 w-24 rounded-full bg-primary/10 flex items-center justify-center border-2 border-primary mb-6 relative"><span className="font-bold text-2xl text-primary tracking-tighter">NAIJA<br />MADE</span></div>
+                                    <h3 className="text-xl font-bold text-white mb-2">Proudly Nigerian</h3><p className="text-gray-400 text-sm max-w-xs">Sourcing 90% of our flour and ingredients from local farmers in Northern Nigeria.</p>
+                                </div>
+                                <TrustPillar icon="workspace_premium" iconColor="text-blue-400" title="Premium Standards" desc="ISO 9001:2015 compliant processes ensuring consistency in every loaf." />
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            );
+        };
+
+        /* ================================================================
+         * SECTION 8: STORY PAGE
+         * @ai-context: Brand storytelling page with artisan process steps,
+         *   interactive ingredient grid, daily selection cards, 3D showcase,
+         *   catering cards, and baker editorial section.
+         * ================================================================ */
+
+        const ProcessStep = ({ index, title, desc, image, reverse }) => (
+            <div className={`flex flex-col md:flex-row items-center gap-12 ${reverse ? 'md:flex-row-reverse' : ''}`}>
+                <motion.div initial={{ opacity: 0, x: reverse ? 50 : -50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="w-full md:w-1/2 relative group">
+                    <div className="w-full h-[300px] md:h-[500px] overflow-hidden shadow-2xl transition-all duration-700 group-hover:scale-[1.02]" style={{ borderRadius: reverse ? '30% 70% 70% 30% / 30% 30% 70% 70%' : '70% 30% 30% 70% / 60% 40% 60% 40%' }}>
+                        <img src={image} className="w-full h-full object-cover grayscale-[20%] group-hover:grayscale-0 transition-all duration-700" alt={title} />
+                    </div>
+                    <div className="absolute -bottom-8 -right-8 md:-bottom-12 md:-right-12 text-stone-100/10 dark:text-white/5 font-serif text-9xl pointer-events-none">0{index}</div>
+                </motion.div>
+                <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="w-full md:w-1/2 space-y-6">
+                    <span className="text-primary font-bold uppercase tracking-widest text-sm block">Artisan Notes</span>
+                    <h3 className="font-serif text-4xl md:text-5xl text-text-coffee dark:text-white">{title}</h3>
+                    <p className="text-lg text-stone-500 leading-relaxed font-light">{desc}</p>
+                    <button className="text-primary font-bold flex items-center gap-2 hover:translate-x-2 transition-transform">Read the science <span className="material-icons">arrow_forward</span></button>
+                </motion.div>
+            </div>
+        );
+
+        const RollCard = ({ title, price, image }) => (
+            <motion.div whileHover={{ y: -10 }} className="bg-white dark:bg-stone-800 rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 border border-stone-100 dark:border-stone-700">
+                <div className="relative h-64 overflow-hidden"><img src={image} className="w-full h-full object-cover" alt={title} /><div className="absolute top-4 right-4 bg-primary text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg">New</div></div>
+                <div className="p-6"><h4 className="font-serif text-xl mb-1 dark:text-white">{title}</h4><p className="text-primary font-bold">{price}</p></div>
+            </motion.div>
+        );
+
+        const CateringCard = ({ title, desc, image, cta, active }) => (
+            <div className={`p-8 rounded-[40px] transition-all duration-500 ${active ? 'bg-primary scale-105 shadow-[0_30px_60px_rgba(236,109,19,0.4)]' : 'bg-stone-800 hover:bg-stone-700'}`}>
+                <div className="aspect-video rounded-3xl overflow-hidden mb-8 shadow-inner"><img src={image} className="w-full h-full object-cover opacity-80" alt={title} /></div>
+                <div className="flex items-center gap-4 mb-4"><span className="material-icons text-3xl">{title === 'Corporate' ? 'business' : title === 'Events' ? 'celebration' : 'local_shipping'}</span><h3 className="text-2xl font-serif font-bold">{title}</h3></div>
+                <p className={`text-sm mb-8 leading-relaxed ${active ? 'text-white' : 'text-stone-400'}`}>{desc}</p>
+                <button className={`w-full py-4 rounded-2xl font-bold transition-all ${active ? 'bg-white text-primary' : 'bg-stone-900 text-white hover:bg-black'}`}>{cta}</button>
+            </div>
+        );
+
+        const Story = () => {
+            return (
+                <div className="bg-background-light dark:bg-background-dark overflow-x-hidden">
+                    {/* Hero */}
+                    <section className="relative h-screen min-h-[700px] flex items-center justify-center overflow-hidden bg-stone-900">
+                        <div className="absolute inset-0 z-0"><img alt="Baker dusting flour on dough" className="w-full h-full object-cover opacity-60 grayscale-[30%]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6SG_V94G3jAOPP14HMgaAc2y6fE1y54l-T9C_E8xI1lee7tUiF_qJrO8kXpExWPXmuyi8aqoigi93IDoakFe7g9F7qjyPpIDuf5zvLq-T9HQck89ar2rvOtJOWbapiebrimVajx_o7xAq0UfknDkv0sjaGWYqUmPn7GOzTdfsSZqTNiJPRV2YdCQ87VO5yahIhmngNShbsfl5AgO4_w5JoN1TT8lQmCaRisnMIBX9YW4YySXwnKh-Uwv2ioOH1i39jT1EUr1eVcIX" /><div className="absolute inset-0 bg-gradient-to-b from-transparent via-stone-900/20 to-stone-900"></div></div>
+                        <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
+                            <motion.h1 initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 1 }} className="font-serif text-6xl md:text-8xl lg:text-9xl text-white font-bold mb-6">Jos's Morning Ritual</motion.h1>
+                            <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ delay: 0.5, duration: 1 }} className="text-stone-300 text-xl md:text-2xl font-light tracking-[0.2em] uppercase">Hot, fresh, and ready by 7:00 AM.</motion.p>
+                        </div>
+                    </section>
+
+                    {/* Artisan Process Steps */}
+                    <section className="py-32 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+                        <div className="text-center mb-24"><h2 className="font-serif text-5xl md:text-6xl text-text-coffee dark:text-white mb-4">The Artisanal Process</h2><div className="w-24 h-1 bg-primary mx-auto"></div></div>
+                        <div className="space-y-32 md:space-y-64">
+                            <ProcessStep index={1} title="45-Hour Fermentation" desc="Slow fermentation ensures a rich, complex flavor and a texture that is light yet substantial." image="https://lh3.googleusercontent.com/aida-public/AB6AXuD9AdQcTD0npuPqeB1MkUOpzNcQ_bmlr55FObJd7BiXSrLsv21dC8nYt7TMtdWa9rUF2xR7Dv7ZjA8VTXqcWt961UQEfZIsle-QgyvY-W_l2FdtGhXgDxcPC7BVvYBlihw6uwo8qGfPj1HFG0LUTU-6-xUllZRQ_sNuGDnDR1ndaGj4QlDrwzLDNnx8NFDEk9xAUKMJzSBMJ4EdWxutNIiONZeeTQDLxyIdSsUImu6287f0OhweUM6HW_lF5K8CBEnwGxwdvygXaPFT" reverse />
+                            <ProcessStep index={2} title="48-Hour Fermentation" desc="Our signature sourdough culture is exactly what makes our bread unique." image="https://lh3.googleusercontent.com/aida-public/AB6AXuA8jmr4oztTQ8QwKXjjb4cQPlKaOB4R-eWMBq8_Csa1ENWeji-HcmhbUesMcE8hbj-0Ax3JZhTLc0GyCOeRcwrbYzTViEqywn3R_2-SthdRopZVMVTNZ1WqnQBr8-LK7OnNKYx4rWuj8_szD_q6-mKdt56d1BeZHSURh5EXpjkKwfe7LNALEI6xpoF0MENRWl-MIwX0My0xHjChEy7JhmtHGr-AYk4l1f6dCEOxq-0Ep04yKLYygUtXUhb5RozBayayNVk-Lug0tPjj" />
+                            <ProcessStep index={3} title="Skillfully Scored" desc="The scoring allows the bread to expand perfectly in the oven." image="https://lh3.googleusercontent.com/aida-public/AB6AXuAnDkmQLViId92Xb5EIwK923g9s4vEyP7kRlaoy-PSt-Q5O0XHMLFkbPtmcHArRNuxNfF0tn5WpSr4cadPNsC7b9MCBCn1LdhvH_CGIUR-ktHXG4FsOH1apFckqn7x4tnXxB0QVPJDycxVhTK2kWSOBdfFrldA95svT7P3iGydLOAxlyeiM07nPh86t_cM1naYI95F7GOQFfRaCn9oTK5SHmBnOS5QQKAPj7G81IFRGKK6nMwwdbaX0m0WZrSvRW8-rJDYLC9zGGoUC" reverse />
+                            <ProcessStep index={4} title="The Final Bake" desc="Controlled heat and steam are the final elements for a perfect crust." image="https://lh3.googleusercontent.com/aida-public/AB6AXuCd_TmNBtFRIqwh5bh7iSlOdqRDJSGJVKP1T-3YCFoq-WnNanHo6WbBuRXRvvs8tGQSZK1dZn6I3a6iJHL4byM9r5DC26JFjA7U9s_o2o2ia367BS2gVpc2LHYMwm5e_UPo_r_GPIZKyQHnoR8vXlbdPWdS5z5SZxXQd68-5uWq1QMGTj01wNIGMZG1jB4PPdc9XAUU0ZRvEHw44Sdxiw4c5TdmJpuXivg3eodT1I-xcIyM6u9Br9l8Z00zpX_O4pUx_7yGlsf2Knwr" />
+                        </div>
+                    </section>
+
+                    {/* Daily Selection Cards */}
+                    <section className="py-32 max-w-7xl mx-auto px-4">
+                        <div className="text-center mb-16"><h2 className="font-serif text-5xl dark:text-white mb-8">Interactive Daily Selection</h2></div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                            <RollCard title="Sticky Cinnamon Roll" price="$12.00" image="https://lh3.googleusercontent.com/aida-public/AB6AXuCd_TmNBtFRIqwh5bh7iSlOdqRDJSGJVKP1T-3YCFoq-WnNanHo6WbBuRXRvvs8tGQSZK1dZn6I3a6iJHL4byM9r5DC26JFjA7U9s_o2o2ia367BS2gVpc2LHYMwm5e_UPo_r_GPIZKyQHnoR8vXlbdPWdS5z5SZxXQd68-5uWq1QMGTj01wNIGMZG1jB4PPdc9XAUU0ZRvEHw44Sdxiw4c5TdmJpuXivg3eodT1I-xcIyM6u9Br9l8Z00zpX_O4pUx_7yGlsf2Knwr" />
+                            <RollCard title="Cinnamon Rolls (Fresh)" price="$12.00" image="https://lh3.googleusercontent.com/aida-public/AB6AXuDYvf77WkTzo48ZPbJwUbQetCY5GnPm0VNmBHX0NT52ceOmSMsQZHiYsq9NcCufvHkW87mOr6Z7DTgftYf8q1h6AHQM8XNZeZnPrLJoJNhWZvwsRgqxS8vOeeR2JCDpJoMJqdY6l7G-xynMPgrNZX3i-mBcBfzq3YlV640wg5x5BjcnS_G_UbOryxsD1iSmAv08WogejIlucFklzxkv2CI0kfa_ilSMPwqWo6-tr1Z6Wd7aoOqW5gpClZIalrlkkyU4U9a7i9ViNPEd" />
+                            <RollCard title="Sticky Cinnamon Roll" price="$15.00" image="https://lh3.googleusercontent.com/aida-public/AB6AXuCzuTGeynABEZq_RNMW_0DWnpySiwUdY708i6ZVWjZ7aIl0DpPLMJq1VQVEwuiE3nMamKg_bwuczTqbcV6ecYVDUXjY9SZK519_nntwfz9HAhku_iqDi_Ef3RUdWrVu9jrh-MWAyUVc-FKp3_XCiyFx_P2OM-jDXRGULnYJqVqUqqx6jyHp_XoHc7SCS-NUZMRZsCvKWvMaSW8Dsah1KUa05a9i3V7cPWokidQYzWZ7hkP9T04I1yuxLjt0g6HhgWkppOALuJnR6wrU" />
+                            <RollCard title="Cinnamon Rolls" price="$18.50" image="https://lh3.googleusercontent.com/aida-public/AB6AXuCye9YH_o_PRcnhP-s4c_Ay_E9zoNz1oReHKAlsEWfNNc7YuV1Ha_6yYsqEUNMItX38C0VGq1fAUZNac96Mv6pe6yEH50CBl63aS0HNTNeWMPszVliMAlJsLceV2USAOc-QqVgcYwFhNWDkWc-U21cu4YBhsJY4vLKePO8OOJu4Ob-3FXxKeGeeC0ntOXjwSXivoh7nmf_8bN0KAJXnAI1QrUdSzNf-eKfwDlmUyKwpzDVdMYGPCLtqb1ExbXZnDi5J0HvGIlco5PcP" />
+                        </div>
+                    </section>
+
+                    {/* Catering Cards */}
+                    <section className="py-32 bg-background-dark text-white relative">
+                        <div className="max-w-7xl mx-auto px-4">
+                            <h2 className="font-serif text-5xl md:text-6xl text-center mb-24">Catering &amp; Bulk</h2>
+                            <div className="grid md:grid-cols-3 gap-8">
+                                <CateringCard title="Corporate" desc="Corporate event photography and catering tailored to your brand." image="https://lh3.googleusercontent.com/aida-public/AB6AXuBF_lco6zprEdQlI2LmcDLCSaXVyBB8sfTNRNQBZtPsBrXL6WpfVvb_Rhvg8zDIa-fYvgnDxVUQX-66V4dPxxANmhZdEaMyMlV1R2DZ5AvRfCgjRipVcBIS0HCdHjN5qrXr4CObMPzHS9HXJQHExewlvcHHpf8PDRLfpxYmjw0LFXE-88dpfDQfpkEWHnfqTD6V9dipw-i5Jl4N7SbYSfjM_StPM4T9Y6ww6OIWhf4iWRpr7Utv6DsIBvyjVA64s7c4Ye0yc2R8DPrQ" cta="Download Menu" />
+                                <CateringCard title="Events" desc="Delectable event catering for your most precious moments." image="https://lh3.googleusercontent.com/aida-public/AB6AXuDjgjqXBUvUI7yxu18cPbEjS1s8IUe5XW_xHaLIr4rMKNABX4YLBU9wyfc9jzXS_72wgh3LEygdAFzWawbgEYl9l56K5jKVevcNj53uFFdozb_fX16MgMXoIUZwbAjcZ3acr816xSDxII3_ETinK7g6fECd9YjnMfzQOZ4a8ETC6ChJfm8vduGzxVmlbogc-Ye-GLnhimriXR1UlqtxeG2ghiYRw2UzyO00cHNlhx7xCNIn_hZyFk9W98hl0w4wRUCjriyWFFU4ZMIa" cta="Inquire Now" active />
+                                <CateringCard title="Wholesale" desc="Bulk orders for your business." image="https://lh3.googleusercontent.com/aida-public/AB6AXuAnDkmQLViId92Xb5EIwK923g9s4vEyP7kRlaoy-PSt-Q5O0XHMLFkbPtmcHArRNuxNfF0tn5WpSr4cadPNsC7b9MCBCn1LdhvH_CGIUR-ktHXG4FsOH1apFckqn7x4tnXxB0QVPJDycxVhTK2kWSOBdfFrldA95svT7P3iGydLOAxlyeiM07nPh86t_cM1naYI95F7GOQFfRaCn9oTK5SHmBnOS5QQKAPj7G81IFRGKK6nMwwdbaX0m0WZrSvRW8-rJDYLC9zGGoUC" cta="Learn More" />
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            );
+        };
+
+        const App = () => (
+            <HashRouter>
+                <div className="flex flex-col min-h-screen">
+                    <Navbar />
+                    <main className="flex-grow pt-16 md:pt-20">
+                        <Routes>
+                            <Route path="/" element={<Home />} />
+                            <Route path="/architect" element={<Architect />} />
+                            <Route path="/wholesale" element={<Wholesale />} />
+                            <Route path="/story" element={<Story />} />
+                        </Routes>
+                    </main>
+                    <Footer />
+                </div>
+            </HashRouter>
+        );
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+
+    <!-- 📜 CODE FRAGMENTS REFERENCE: Readily accessible links to original source pieces -->
+    <section class="bg-stone-50 dark:bg-stone-900 border-t border-stone-200 dark:border-stone-800 py-12 px-6">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="font-serif text-2xl text-text-coffee dark:text-white mb-6">Developer Reference & Code Fragments
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-sm">
+                <div>
+                    <h3 class="font-bold text-primary mb-3 uppercase tracking-widest text-[10px]">Challenge Guide</h3>
+                    <a href="challenge_instructions.html"
+                        class="text-stone-600 dark:text-stone-400 hover:text-primary flex items-center gap-2"><span
+                            class="material-icons text-xs">help_outline</span> Rules & Instructions</a>
+                </div>
+                <div>
+                    <h3 class="font-bold text-stone-400 mb-3 uppercase tracking-widest text-[10px]">Core Logic</h3>
+                    <ul class="space-y-2">
+                        <li><a href="source_app.html" class="text-stone-600 dark:text-stone-400 hover:text-primary">📄
+                                source_app.tsx</a></li>
+                        <li><a href="source_navbar.html"
+                                class="text-stone-600 dark:text-stone-400 hover:text-primary">📄 source_navbar.tsx</a>
+                        </li>
+                        <li><a href="source_footer.html"
+                                class="text-stone-600 dark:text-stone-400 hover:text-primary">📄 source_footer.tsx</a>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-bold text-stone-400 mb-3 uppercase tracking-widest text-[10px]">Page Templates</h3>
+                    <ul class="space-y-2">
+                        <li><a href="source_home.html" class="text-stone-600 dark:text-stone-400 hover:text-primary">📄
+                                source_home.tsx</a></li>
+                        <li><a href="source_architect.html"
+                                class="text-stone-600 dark:text-stone-400 hover:text-primary">📄
+                                source_architect.tsx</a></li>
+                        <li><a href="source_wholesale.html"
+                                class="text-stone-600 dark:text-stone-400 hover:text-primary">📄
+                                source_wholesale.tsx</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-bold text-stone-400 mb-3 uppercase tracking-widest text-[10px]">Editorial</h3>
+                    <ul class="space-y-2">
+                        <li><a href="source_story.html" class="text-stone-600 dark:text-stone-400 hover:text-primary">📄
+                                source_story.tsx</a></li>
+                    </ul>
+                </div>
+            </div>
+            <p class="mt-8 text-xs text-stone-400 italic">Note: These fragments are for reference and part of the
+                "Rising Dough" rebuild challenge.</p>
+        </div>
+    </section>
+
+
+    <!-- 
+================================================================
+ ORIGINAL SOURCE CODE REFERENCE ARCHIVE
+The following sections contain the verbatim code from the 
+original React files, preserved for AI context and reference.
+================================================================
+
+/* --- FILE: orient-bakery-hub (1)\App.tsx --- */
+/*
+
+import React from 'react';
+import { HashRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
+import Home from './pages/Home';
+import Architect from './pages/Architect';
+import Wholesale from './pages/Wholesale';
+import Story from './pages/Story';
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
+
+const PageWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.4, ease: "easeOut" }}
+    >
+      {children}
+    </motion.div>
+  );
+};
+
+const AnimatedRoutes = () => {
+  const location = useLocation();
+  return (
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        <Route path="/" element={<PageWrapper><Home /></PageWrapper>} />
+        <Route path="/architect" element={<PageWrapper><Architect /></PageWrapper>} />
+        <Route path="/wholesale" element={<PageWrapper><Wholesale /></PageWrapper>} />
+        <Route path="/story" element={<PageWrapper><Story /></PageWrapper>} />
+      </Routes>
+    </AnimatePresence>
+  );
+};
+
+const App: React.FC = () => {
+  return (
+    <HashRouter>
+      <div className="flex flex-col min-h-screen">
+        <Navbar />
+        <main className="flex-grow pt-16 md:pt-20">
+          <AnimatedRoutes />
+        </main>
+        <Footer />
+      </div>
+    </HashRouter>
+  );
+};
+
+export default App;
+
+*/
+
+/* --- FILE: orient-bakery-hub (1)\components\Navbar.tsx --- */
+/*
+
+import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
+
+const Navbar: React.FC = () => {
+  const location = useLocation();
+  
+  const isActive = (path: string) => location.pathname === path;
+
+  const navLinks = [
+    { name: 'Live Menu', path: '/' },
+    { name: 'Cake Architect', path: '/architect' },
+    { name: 'Wholesale', path: '/wholesale' },
+    { name: 'Our Story', path: '/story' },
+  ];
+
+  return (
+    <nav className="fixed top-0 w-full z-50 bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-md border-b border-gray-200 dark:border-gray-800">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-20">
+          <Link to="/" className="flex-shrink-0 flex items-center gap-2">
+            <span className="material-icons text-primary text-3xl">bakery_dining</span>
+            <span className="text-2xl font-bold tracking-tight uppercase font-display dark:text-white">Orient Bakery</span>
+          </Link>
+          <div className="hidden md:block">
+            <div className="ml-10 flex items-center space-x-4">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  className={`${
+                    isActive(link.path)
+                      ? 'text-primary'
+                      : 'text-gray-600 dark:text-gray-300 hover:text-primary'
+                  } transition-colors px-3 py-2 rounded-md text-sm font-medium`}
+                >
+                  {link.name}
+                </Link>
+              ))}
+              
+              <div className="h-6 w-px bg-gray-300 dark:bg-gray-700 mx-2"></div>
+
+              {/* Transported CTA */}
+              <button className="flex items-center gap-2 text-text-coffee dark:text-white hover:text-primary font-bold text-sm px-3 py-2 transition-colors">
+                <span className="material-icons text-primary">call</span>
+                Call the Baker
+              </button>
+
+              <Link
+                to="/wholesale"
+                className="bg-primary text-white px-5 py-2 rounded-full text-sm font-bold hover:bg-orange-600 transition-all shadow-lg shadow-primary/30"
+              >
+                Order Pickup
+              </Link>
+            </div>
+          </div>
+          
+          {/* Mobile Menu Trigger (Simplified) */}
+          <div className="md:hidden flex items-center gap-4">
+             <button className="text-primary font-bold">
+                <span className="material-icons">call</span>
+             </button>
+             <button className="text-gray-600 dark:text-gray-300">
+                <span className="material-icons">menu</span>
+             </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+  );
+};
+
+export default Navbar;
+
+*/
+
+/* --- FILE: orient-bakery-hub (1)\components\Footer.tsx --- */
+/*
+
+import React from 'react';
+
+const Footer: React.FC = () => {
+  return (
+    <footer className="bg-black text-white py-20 border-t border-gray-900">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-12">
+        <div className="space-y-6">
+          <div className="flex items-center gap-2">
+            <span className="material-icons text-primary text-3xl">bakery_dining</span>
+            <span className="text-xl font-bold uppercase tracking-tight">Orient Bakery</span>
+          </div>
+          <p className="text-gray-500 text-sm leading-relaxed">
+            Leading the way in artisanal baking and event catering since 1998. Freshly baked daily, with passion.
+          </p>
+          <div className="flex gap-4">
+            <SocialIcon icon="facebook" />
+            <SocialIcon icon="camera_alt" />
+            <SocialIcon icon="place" />
+          </div>
+        </div>
+        
+        <div>
+          <h4 className="font-bold mb-6 text-gray-200">Shop</h4>
+          <ul className="space-y-4 text-sm text-gray-500">
+            <li><a href="#" className="hover:text-primary transition">Daily Menu</a></li>
+            <li><a href="#" className="hover:text-primary transition">Custom Cakes</a></li>
+            <li><a href="#" className="hover:text-primary transition">Wholesale Portal</a></li>
+            <li><a href="#" className="hover:text-primary transition">Bulk Orders</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 className="font-bold mb-6 text-gray-200">Our Bakery</h4>
+          <ul className="space-y-4 text-sm text-gray-500">
+            <li><a href="#" className="hover:text-primary transition">Our Story</a></li>
+            <li><a href="#" className="hover:text-primary transition">Workshops</a></li>
+            <li><a href="#" className="hover:text-primary transition">Locations</a></li>
+            <li><a href="#" className="hover:text-primary transition">Sustainability</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 className="font-bold mb-6 text-gray-200">Contact</h4>
+          <ul className="space-y-4 text-sm text-gray-500">
+            <li className="flex items-center gap-2"><span className="material-icons text-xs">location_on</span> No. 45 Ahmadu Bello Way, Jos</li>
+            <li className="flex items-center gap-2"><span className="material-icons text-xs">phone</span> +234 800 ORIENT</li>
+            <li className="flex items-center gap-2"><span className="material-icons text-xs">email</span> fresh@orientbakery.ng</li>
+          </ul>
+        </div>
+      </div>
+      <div className="max-w-7xl mx-auto px-4 mt-20 pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center gap-4 text-gray-600 text-xs">
+         <p>Ã‚Â© 2024 Orient Bakery Nigeria Ltd. All rights reserved.</p>
+         <div className="flex gap-6">
+           <a href="#" className="hover:text-gray-400">Privacy Policy</a>
+           <a href="#" className="hover:text-gray-400">Terms of Service</a>
+         </div>
+      </div>
+    </footer>
+  );
+};
+
+const SocialIcon: React.FC<{ icon: string }> = ({ icon }) => (
+  <a href="#" className="text-gray-400 hover:text-primary transition-colors border border-gray-800 p-2 rounded-full flex items-center justify-center">
+    <span className="material-icons text-xl">{icon}</span>
+  </a>
+);
+
+export default Footer;
+
+*/
+
+/* --- FILE: orient-bakery-hub (1)\pages\Architect.tsx --- */
+/*
+
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+
+type ConfigState = {
+  tier: number;
+  flavor: string;
+  frosting: string;
+  toppings: string[];
+};
+
+const Architect: React.FC = () => {
+  const [step, setStep] = useState(1);
+  const [config, setConfig] = useState<ConfigState>({
+    tier: 2,
+    flavor: 'Vanilla',
+    frosting: 'Buttercream',
+    toppings: []
+  });
+
+  const tierOptions = [
+    { value: 1, label: 'Single Tier', price: 40, desc: 'Serves 10-15' },
+    { value: 2, label: 'Double Tier', price: 65, desc: 'Serves 25-30' },
+    { value: 3, label: 'Grand Tier', price: 95, desc: 'Serves 50+' },
+  ];
+
+  const flavorOptions = [
+    { name: 'Vanilla', color: 'none', filter: 'brightness(105%) sepia(20%)', desc: 'Madagascar Bean' },
+    { name: 'Chocolate', color: '#5D4037', filter: 'brightness(60%) sepia(80%) hue-rotate(340deg) saturate(150%)', desc: 'Belgian Dark' },
+    { name: 'Red Velvet', color: '#C62828', filter: 'brightness(80%) sepia(50%) hue-rotate(310deg) saturate(250%)', desc: 'Classic Southern' },
+    { name: 'Lemon', color: '#FBC02D', filter: 'brightness(100%) sepia(100%) hue-rotate(10deg) saturate(150%)', desc: 'Zesty Citrus' },
+  ];
+
+  const frostingOptions = [
+    { name: 'Buttercream', desc: 'Classic texture', icon: 'blur_on' },
+    { name: 'Fondant', desc: 'Smooth finish', icon: 'lens' },
+    { name: 'Naked', desc: 'Exposed layers', icon: 'texture' },
+  ];
+
+  const toppingOptions = [
+    { name: 'Berries', icon: 'Ã°Å¸Ââ€œ', price: 5 },
+    { name: 'Flowers', icon: 'Ã°Å¸Å’Â¸', price: 8 },
+    { name: 'Gold Leaf', icon: 'Ã¢Å“Â¨', price: 12 },
+    { name: 'Topper', icon: 'Ã°Å¸Å½â€š', price: 10 },
+  ];
+
+  const handleToppingToggle = (name: string) => {
+    setConfig(prev => {
+      const exists = prev.toppings.includes(name);
+      return {
+        ...prev,
+        toppings: exists ? prev.toppings.filter(t => t !== name) : [...prev.toppings, name]
+      };
+    });
+  };
+
+  const calculateTotal = () => {
+    const tierPrice = tierOptions.find(t => t.value === config.tier)?.price || 0;
+    const toppingsPrice = config.toppings.reduce((acc, curr) => {
+      const top = toppingOptions.find(t => t.name === curr);
+      return acc + (top?.price || 0);
+    }, 0);
+    return tierPrice + toppingsPrice;
+  };
+
+  const currentFlavor = flavorOptions.find(f => f.name === config.flavor);
+
+  const nextStep = () => setStep(prev => Math.min(prev + 1, 4));
+  const prevStep = () => setStep(prev => Math.max(prev - 1, 1));
+  const jumpToStep = (s: number) => setStep(s);
+
+  return (
+    <div className="h-[calc(100vh-80px)] flex overflow-hidden bg-background-light dark:bg-background-dark">
+      {/* Left Panel: 3D Viewport */}
+      <section className="relative flex-grow h-full bg-[#f1f5f9] dark:bg-[#0f172a] flex items-center justify-center overflow-hidden group">
+        <div className="relative w-full h-full flex items-center justify-center">
+          <AnimatePresence mode='wait'>
+            <motion.div
+              key={config.tier + config.flavor} // Re-animate on major changes
+              initial={{ scale: 0.9, opacity: 0.8 }}
+              animate={{ 
+                scale: config.tier === 1 ? 0.8 : config.tier === 2 ? 1 : 1.2, 
+                opacity: 1 
+              }}
+              transition={{ type: "spring", stiffness: 100 }}
+              className="relative w-full h-full flex items-center justify-center"
+            >
+               <img 
+                alt="3D Cake Render" 
+                className="max-h-[70%] max-w-[80%] object-contain drop-shadow-2xl transition-all duration-700" 
+                style={{ 
+                   filter: currentFlavor?.filter || 'none',
+                   // Simulate frosting texture change slightly via contrast/brightness if needed
+                   opacity: config.frosting === 'Naked' ? 0.9 : 1
+                }}
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjgjqXBUvUI7yxu18cPbEjS1s8IUe5XW_xHaLIr4rMKNABX4YLBU9wyfc9jzXS_72wgh3LEygdAFzWawbgEYl9l56K5jKVevcNj53uFFdozb_fX16MgMXoIUZwbAjcZ3acr816xSDxII3_ETinK7g6fECd9YjnMfzQOZ4a8ETC6ChJfm8vduGzxVmlbogc-Ye-GLnhimriXR1UlqtxeG2ghiYRw2UzyO00cHNlhx7xCNIn_hZyFk9W98hl0w4wRUCjriyWFFU4ZMIa"
+              />
+              
+              {/* Overlay Toppings */}
+              <div className="absolute inset-0 pointer-events-none">
+                {config.toppings.includes('Berries') && (
+                  <>
+                     <span className="absolute top-[35%] left-[45%] text-4xl animate-bounce" style={{ animationDuration: '3s' }}>Ã°Å¸Ââ€œ</span>
+                     <span className="absolute top-[40%] right-[42%] text-3xl animate-bounce" style={{ animationDuration: '4s' }}>Ã°Å¸Ââ€œ</span>
+                     <span className="absolute bottom-[40%] left-[38%] text-3xl">Ã°Å¸Ââ€œ</span>
+                  </>
+                )}
+                {config.toppings.includes('Flowers') && (
+                  <>
+                     <span className="absolute top-[30%] right-[45%] text-4xl animate-pulse">Ã°Å¸Å’Â¸</span>
+                     <span className="absolute top-[50%] left-[40%] text-3xl">Ã°Å¸Å’Âº</span>
+                  </>
+                )}
+                {config.toppings.includes('Gold Leaf') && (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <span className="absolute top-[32%] text-4xl animate-pulse text-yellow-400 opacity-60">Ã¢Å“Â¨</span>
+                    <span className="absolute top-[45%] left-[40%] text-2xl animate-pulse text-yellow-400 opacity-60">Ã¢Å“Â¨</span>
+                  </div>
+                )}
+                {config.toppings.includes('Topper') && (
+                   <span className="absolute top-[15%] left-[50%] transform -translate-x-1/2 text-6xl drop-shadow-lg">Ã°Å¸Å½â€š</span>
+                )}
+              </div>
+            </motion.div>
+          </AnimatePresence>
+          
+          <div className="absolute bottom-0 w-full h-1/2 bg-gradient-to-t from-black/5 to-transparent pointer-events-none"></div>
+        </div>
+
+        {/* View Controls */}
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-white/70 dark:bg-gray-800/70 backdrop-blur-md rounded-full px-6 py-3 flex items-center gap-4 shadow-lg">
+          <button className="p-2 hover:bg-primary/10 rounded-full transition-colors"><span className="material-icons">rotate_left</span></button>
+          <div className="w-px h-4 bg-gray-300 dark:bg-gray-600"></div>
+          <button className="p-2 hover:bg-primary/10 rounded-full transition-colors"><span className="material-icons">remove</span></button>
+          <span className="text-xs font-bold text-gray-500">100%</span>
+          <button className="p-2 hover:bg-primary/10 rounded-full transition-colors"><span className="material-icons">add</span></button>
+          <div className="w-px h-4 bg-gray-300 dark:bg-gray-600"></div>
+          <button className="p-2 hover:bg-primary/10 rounded-full transition-colors"><span className="material-icons">rotate_right</span></button>
+        </div>
+
+        {/* Toggles */}
+        <div className="absolute top-6 right-6 flex flex-col gap-2">
+          <IconButton icon="wb_sunny" />
+          <IconButton icon="grid_4x4" />
+          <IconButton icon="fullscreen" />
+        </div>
+      </section>
+
+      {/* Right Panel: Configurator */}
+      <aside className="w-[450px] flex-none bg-white dark:bg-coffee-dark border-l border-gray-200 dark:border-white/10 flex flex-col shadow-2xl relative z-10">
+        <div className="px-6 py-6 border-b border-gray-100 dark:border-white/5">
+          <div className="flex justify-between items-center mb-2">
+            <span className="text-xs font-bold text-primary uppercase tracking-wider">Step {step} of 4</span>
+            <span className="text-xs text-gray-400 font-mono">ID: #CA-8921</span>
+          </div>
+          <div className="h-1.5 w-full bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
+            <motion.div 
+              initial={{ width: 0 }}
+              animate={{ width: `${(step / 4) * 100}%` }}
+              className="h-full bg-primary rounded-full transition-all duration-500"
+            ></motion.div>
+          </div>
+          <div className="flex justify-between mt-2 text-[10px] font-medium text-gray-400">
+            <span className={step >= 1 ? 'text-primary' : ''}>Base</span>
+            <span className={step >= 2 ? 'text-primary' : ''}>Flavor</span>
+            <span className={step >= 3 ? 'text-primary' : ''}>Frosting</span>
+            <span className={step >= 4 ? 'text-primary' : ''}>Accents</span>
+          </div>
+        </div>
+
+        <div className="flex-grow overflow-y-auto no-scrollbar px-6 py-8 space-y-6">
+          
+          {/* Step 1: Tier */}
+          {step === 1 && (
+            <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
+              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6 font-display">Select Size & Tier</h3>
+              <div className="space-y-3">
+                {tierOptions.map((tier) => (
+                  <button
+                    key={tier.value}
+                    onClick={() => setConfig({...config, tier: tier.value})}
+                    className={`w-full p-4 rounded-xl border-2 text-left flex justify-between items-center transition-all ${
+                      config.tier === tier.value 
+                      ? 'border-primary bg-primary/5 dark:bg-primary/10' 
+                      : 'border-gray-200 dark:border-gray-700 hover:border-primary/50'
+                    }`}
+                  >
+                    <div>
+                      <span className="block font-bold text-gray-800 dark:text-white">{tier.label}</span>
+                      <span className="text-xs text-gray-500">{tier.desc}</span>
+                    </div>
+                    <span className="font-bold text-primary">${tier.price}</span>
+                  </button>
+                ))}
+              </div>
+            </motion.div>
+          )}
+
+          {/* Step 2: Flavor */}
+          {step === 2 && (
+             <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}>
+              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6 font-display">Choose Flavor Profile</h3>
+              <div className="grid grid-cols-2 gap-3">
+                {flavorOptions.map((flavor) => (
+                  <button
+                    key={flavor.name}
+                    onClick={() => setConfig({...config, flavor: flavor.name})}
+                    className={`p-4 rounded-xl border-2 text-left transition-all ${
+                       config.flavor === flavor.name 
+                       ? 'border-primary bg-primary/5' 
+                       : 'border-gray-200 dark:border-gray-700 hover:border-primary/50'
+                    }`}
+                  >
+                    <div className="w-8 h-8 rounded-full mb-3 border border-black/10 shadow-sm" style={{ backgroundColor: flavor.color === 'none' ? '#fdf5e6' : flavor.color }}></div>
+                    <span className="block font-bold text-sm text-gray-900 dark:text-white">{flavor.name}</span>
+                    <span className="text-xs text-gray-500">{flavor.desc}</span>
+                  </button>
+                ))}
+              </div>
+            </motion.div>
+          )}
+
+          {/* Step 3: Frosting */}
+          {step === 3 && (
+            <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}>
+              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6 font-display">Frosting Style</h3>
+              <div className="space-y-3">
+                {frostingOptions.map((opt) => (
+                  <button
+                    key={opt.name}
+                    onClick={() => setConfig({...config, frosting: opt.name})}
+                    className={`w-full p-4 rounded-xl border-2 flex items-center gap-4 transition-all ${
+                      config.frosting === opt.name 
+                        ? 'border-primary bg-primary/5 dark:bg-primary/10' 
+                        : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-primary/50'
+                    }`}
+                  >
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center ${config.frosting === opt.name ? 'bg-white dark:bg-gray-800 shadow-sm' : 'bg-gray-100 dark:bg-gray-700'}`}>
+                      <span className={`material-icons ${config.frosting === opt.name ? 'text-primary' : 'text-gray-400'}`}>{opt.icon}</span>
+                    </div>
+                    <div className="text-left">
+                      <span className="block font-bold text-sm text-gray-900 dark:text-white">{opt.name}</span>
+                      <span className="block text-xs text-gray-500">{opt.desc}</span>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </motion.div>
+          )}
+
+          {/* Step 4: Toppings */}
+          {step === 4 && (
+            <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}>
+              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6 font-display">Add Final Touches</h3>
+              <div className="grid grid-cols-2 gap-3">
+                {toppingOptions.map((top) => (
+                  <button
+                    key={top.name}
+                    onClick={() => handleToppingToggle(top.name)}
+                    className={`p-4 rounded-xl border-2 text-center transition-all relative ${
+                      config.toppings.includes(top.name)
+                        ? 'border-primary bg-primary/5' 
+                        : 'border-gray-200 dark:border-gray-700 hover:border-primary/50'
+                    }`}
+                  >
+                    <div className="text-3xl mb-2">{top.icon}</div>
+                    <span className="block font-bold text-sm text-gray-900 dark:text-white">{top.name}</span>
+                    <span className="text-xs text-primary font-bold">+${top.price}</span>
+                    {config.toppings.includes(top.name) && (
+                      <div className="absolute top-2 right-2 w-5 h-5 bg-primary rounded-full text-white flex items-center justify-center">
+                        <span className="material-icons text-[14px]">check</span>
+                      </div>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </motion.div>
+          )}
+
+          {/* Summary of Selection (Visible when not editing that step) */}
+           <div className="mt-8 pt-8 border-t border-gray-100 dark:border-white/5 space-y-4">
+             {step > 1 && <CompletedStep number={1} title="Size" value={tierOptions.find(t => t.value === config.tier)?.label || ''} onEdit={() => jumpToStep(1)} />}
+             {step > 2 && <CompletedStep number={2} title="Flavor" value={config.flavor} onEdit={() => jumpToStep(2)} />}
+             {step > 3 && <CompletedStep number={3} title="Frosting" value={config.frosting} onEdit={() => jumpToStep(3)} />}
+           </div>
+
+        </div>
+
+        {/* Footer */}
+        <div className="p-6 bg-white dark:bg-coffee-dark border-t border-gray-200 dark:border-white/10 shadow-lg">
+          <div className="flex justify-between items-end mb-6">
+            <div>
+              <p className="text-xs text-gray-500 uppercase font-semibold">Estimated Total</p>
+              <p className="text-3xl font-bold text-gray-900 dark:text-white font-display">${calculateTotal().toFixed(2)}</p>
+            </div>
+            <div className="text-right">
+              <p className="text-xs text-green-600 flex items-center justify-end gap-1">
+                <span className="material-icons text-[14px]">local_shipping</span> Free delivery
+              </p>
+            </div>
+          </div>
+          <div className="grid grid-cols-4 gap-3">
+             {step > 1 ? (
+               <button onClick={prevStep} className="border border-gray-200 dark:border-gray-600 rounded-lg flex items-center justify-center text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                 <span className="material-icons">arrow_back</span>
+               </button>
+             ) : (
+                <button className="border border-gray-200 dark:border-gray-600 rounded-lg flex items-center justify-center text-gray-300 cursor-not-allowed">
+                  <span className="material-icons">arrow_back</span>
+                </button>
+             )}
+            
+            {step < 4 ? (
+              <button onClick={nextStep} className="col-span-3 bg-stone-800 hover:bg-stone-900 dark:bg-white dark:text-stone-900 font-bold py-4 rounded-lg shadow-lg flex items-center justify-center gap-2 transform active:scale-95 transition-all text-white">
+                Next Step
+              </button>
+            ) : (
+              <button className="col-span-3 bg-primary hover:bg-primary/90 text-white font-bold py-4 rounded-lg shadow-lg flex items-center justify-center gap-2 transform active:scale-95 transition-all">
+                <span>Order via WhatsApp</span>
+                <span className="material-icons">send</span>
+              </button>
+            )}
+          </div>
+        </div>
+      </aside>
+    </div>
+  );
+};
+
+const IconButton: React.FC<{ icon: string }> = ({ icon }) => (
+  <button className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-md p-3 rounded-lg hover:bg-white transition-colors shadow-sm">
+    <span className="material-icons-outlined text-gray-600 dark:text-gray-300">{icon}</span>
+  </button>
+);
+
+const CompletedStep: React.FC<{ number: number; title: string; value: string; onEdit: () => void }> = ({ title, value, onEdit }) => (
+  <div className="opacity-60 hover:opacity-100 transition-opacity">
+    <div className="flex justify-between items-center mb-1">
+      <h3 className="text-xs font-bold flex items-center gap-2 text-gray-800 dark:text-gray-200 uppercase tracking-wider">
+        <span className="w-4 h-4 rounded-full bg-green-500 text-white flex items-center justify-center text-[10px]"><span className="material-icons text-[10px]">check</span></span>
+        {title}
+      </h3>
+      <button onClick={onEdit} className="text-xs text-primary underline hover:text-orange-600">Edit</button>
+    </div>
+    <div className="pl-6">
+       <p className="text-sm font-semibold text-gray-900 dark:text-white">{value}</p>
+    </div>
+  </div>
+);
+
+export default Architect;
+
+*/
+
+/* --- FILE: orient-bakery-hub (1)\pages\Wholesale.tsx --- */
+/*
+
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
+
+const Wholesale: React.FC = () => {
+  const [units, setUnits] = useState(450);
+
+  // Calculation logic for the widget
+  const basePricePerUnit = 950; // Mock calculation
+  const baseTotal = units * basePricePerUnit;
+  const discountRate = units > 800 ? 0.20 : units > 400 ? 0.12 : 0.05;
+  const discountAmount = baseTotal * discountRate;
+  const finalTotal = baseTotal - discountAmount;
+
+  return (
+    <div className="bg-background-dark text-gray-100 font-display selection:bg-primary selection:text-white">
+      {/* Section 1: Professional Hero */}
+      <section className="relative h-screen min-h-[700px] flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <img 
+            alt="High-end banquet catering setup with chefs serving food" 
+            className="w-full h-full object-cover" 
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuBF_lco6zprEdQlI2LmcDLCSaXVyBB8sfTNRNQBZtPsBrXL6WpfVvb_Rhvg8zDIa-fYvgnDxVUQX-66V4dPxxANmhZdEaMyMlV1R2DZ5AvRfCgjRipVcBIS0HCdHjN5qrXr4CObMPzHS9HXJQHExewlvcHHpf8PDRLfpxYmjw0LFXE-88dpfDQfpkEWHnfqTD6V9dipw-i5Jl4N7SbYSfjM_StPM4T9Y6ww6OIWhf4iWRpr7Utv6DsIBvyjVA64s7c4Ye0yc2R8DPrQ" 
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-background-dark via-background-dark/80 to-background-dark/40"></div>
+        </div>
+        
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/20 border border-primary/30 text-primary text-xs font-bold uppercase tracking-widest mb-6"
+          >
+            <span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span> Premium B2B Services
+          </motion.div>
+          
+          <motion.h1 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight"
+          >
+            Feeding the Crowd <br/> with <span className="text-primary">Excellence.</span>
+          </motion.h1>
+          
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="mt-4 max-w-2xl mx-auto text-xl text-gray-300 font-light"
+          >
+            The trusted partner for hotels, schools, and large-scale events across Plateau State. Precision baking meets reliable logistics.
+          </motion.p>
+          
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="mt-10 flex flex-col sm:flex-row gap-4 justify-center"
+          >
+            <button className="px-8 py-4 bg-primary text-white font-bold rounded hover:bg-primary/90 transition-all transform hover:scale-105 shadow-lg shadow-primary/25 flex items-center justify-center gap-2 active:scale-95">
+              <span className="material-icons">inventory_2</span> Access Wholesale Portal
+            </button>
+            <button className="px-8 py-4 bg-white/10 backdrop-blur-sm border border-white/20 text-white font-bold rounded hover:bg-white/20 transition-all flex items-center justify-center gap-2 transform hover:scale-105 active:scale-95">
+              <span className="material-icons">calendar_month</span> Book Event Catering
+            </button>
+          </motion.div>
+
+          {/* Quick Stats */}
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6 }}
+            className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 border-t border-white/10 pt-8"
+          >
+            <div>
+              <div className="text-3xl font-bold text-white">50k+</div>
+              <div className="text-sm text-gray-400 uppercase tracking-wide">Daily Loaves</div>
+            </div>
+            <div>
+              <div className="text-3xl font-bold text-white">200+</div>
+              <div className="text-sm text-gray-400 uppercase tracking-wide">Corporate Partners</div>
+            </div>
+            <div>
+              <div className="text-3xl font-bold text-white">99%</div>
+              <div className="text-sm text-gray-400 uppercase tracking-wide">On-Time Delivery</div>
+            </div>
+            <div>
+              <div className="text-3xl font-bold text-white">Jos</div>
+              <div className="text-sm text-gray-400 uppercase tracking-wide">HQ & Distribution</div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Section 2: Bulk Ordering Portal */}
+      <section className="py-24 bg-background-dark relative" id="quick-order">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
+            <div>
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-2">Bulk Ordering Portal</h2>
+              <p className="text-gray-400">Streamlined procurement for high-volume accounts.</p>
+            </div>
+            <div className="flex gap-3">
+              <button className="text-sm text-primary border border-primary px-4 py-2 rounded hover:bg-primary/10 transition">
+                Download Price List (PDF)
+              </button>
+              <button className="text-sm text-gray-300 bg-surface-lighter px-4 py-2 rounded hover:bg-surface-lighter/80 transition flex items-center gap-2">
+                <span className="material-icons text-sm">filter_list</span> Filter
+              </button>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Data Table */}
+            <motion.div 
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="lg:col-span-2 bg-[#2c1f17] rounded-xl border border-white/5 overflow-hidden shadow-2xl"
+            >
+              <div className="overflow-x-auto no-scrollbar">
+                <table className="w-full text-left text-sm text-gray-400">
+                  <thead className="bg-[#3a2a20] text-gray-200 font-bold uppercase text-xs tracking-wider">
+                    <tr>
+                      <th className="px-6 py-4">Product SKU</th>
+                      <th className="px-6 py-4">Item Name</th>
+                      <th className="px-6 py-4 text-right">Unit Price</th>
+                      <th className="px-6 py-4 text-center">In Stock</th>
+                      <th className="px-6 py-4 text-center">Qty</th>
+                      <th className="px-6 py-4 text-right">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-white/5">
+                    <WholesaleRow sku="OB-W-001" name="Premium Family Loaf (Sliced)" price="Ã¢â€šÂ¦1,200" stock="High" stockColor="text-green-500" defaultQty={50} />
+                    <WholesaleRow sku="OB-P-045" name="Meat Pie Catering Box (24pcs)" price="Ã¢â€šÂ¦12,500" stock="Med" stockColor="text-yellow-500" defaultQty={10} bg />
+                    <WholesaleRow sku="OB-W-003" name="Whole Wheat Healthy Loaf" price="Ã¢â€šÂ¦1,500" stock="High" stockColor="text-green-500" defaultQty={25} />
+                    <WholesaleRow sku="OB-D-112" name="Glazed Doughnut Tray (50pcs)" price="Ã¢â€šÂ¦8,000" stock="High" stockColor="text-green-500" defaultQty={5} bg />
+                    <WholesaleRow sku="OB-B-088" name="Burger Buns (Pack of 12)" price="Ã¢â€šÂ¦1,800" stock="Low" stockColor="text-red-500" defaultQty={100} />
+                  </tbody>
+                </table>
+              </div>
+            </motion.div>
+            
+            {/* Savings Calculator Widget */}
+            <div className="lg:col-span-1 space-y-6">
+              <motion.div 
+                initial={{ opacity: 0, x: 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                className="bg-gradient-to-br from-[#2c1f17] to-[#3a2a20] p-6 rounded-xl border border-white/10 shadow-lg"
+              >
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="material-icons text-primary">calculate</span>
+                  <h3 className="text-xl font-bold text-white">Bulk Savings Calculator</h3>
+                </div>
+                <p className="text-sm text-gray-400 mb-6">Enter total units to see your volume discount tier.</p>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-xs font-medium text-gray-400 mb-1 uppercase">Total Units</label>
+                    <input 
+                      className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-primary" 
+                      max="1000" min="0" type="range" 
+                      value={units}
+                      onChange={(e) => setUnits(parseInt(e.target.value))}
+                    />
+                    <div className="flex justify-between text-xs text-gray-500 mt-1">
+                      <span>0</span>
+                      <span className="text-white font-bold">{units} Units</span>
+                      <span>1000+</span>
+                    </div>
+                  </div>
+                  <div className="p-4 bg-background-dark/50 rounded-lg border border-primary/20">
+                    <div className="flex justify-between items-center mb-2 text-sm">
+                      <span className="text-gray-400">Base Price</span>
+                      <span className="text-white line-through decoration-red-500">Ã¢â€šÂ¦{baseTotal.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between items-center mb-2 text-sm">
+                      <span className="text-primary font-bold">Tier {units > 800 ? '3' : units > 400 ? '2' : '1'} Discount ({(discountRate * 100).toFixed(0)}%)</span>
+                      <span className="text-primary">-Ã¢â€šÂ¦{discountAmount.toLocaleString()}</span>
+                    </div>
+                    <div className="h-px bg-white/10 my-2"></div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-white font-bold text-lg">Est. Total</span>
+                      <span className="text-white font-bold text-2xl">Ã¢â€šÂ¦{finalTotal.toLocaleString()}</span>
+                    </div>
+                  </div>
+                  <button className="w-full py-3 bg-primary text-white font-bold rounded shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all mt-4 transform active:scale-95">
+                    Apply to Cart
+                  </button>
+                </div>
+              </motion.div>
+              
+              {/* Alert Box */}
+              <motion.div 
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="bg-primary/10 border-l-4 border-primary p-4 rounded-r"
+              >
+                <div className="flex">
+                  <div className="flex-shrink-0">
+                    <span className="material-icons text-primary">local_shipping</span>
+                  </div>
+                  <div className="ml-3">
+                    <p className="text-sm text-primary font-bold">Free Delivery</p>
+                    <p className="text-sm text-primary/80">
+                      Orders over Ã¢â€šÂ¦200k qualify for free same-day logistics within Jos metropolis.
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Section 3: The Logistics Map */}
+      <section className="py-24 bg-[#2c1f17] relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-black/20 to-transparent"></div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              className="order-2 lg:order-1 relative"
+            >
+              <div className="relative w-full aspect-square md:aspect-[4/3] bg-[#1a1a1a] rounded-xl overflow-hidden border border-white/10 shadow-2xl">
+                <img 
+                  alt="Stylized dark map of Jos city showing road networks" 
+                  className="w-full h-full object-cover opacity-30 grayscale invert" 
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmprho5MDhuLhOfVgQEqJ-MUQ5tryytP6ON6i2vb0Yoas281JrIx5dNJAucfKXPOOFFUgNLyIFF4GZuXazlicapLXhwWNXITxICQlPYIF5qZZniDLtCUMgTKpW_oYroBsTc7QQXHjG5DrZB2-GZhlhc50WljO155_6CVN9WtYDkI7vb0cr3eUJuULhifa5fu8oEtvjoUZQZig2wEWyhSS28U56WA_hXDK5WNWmWJpkPusDA0D68wwI5alXHGVzZnbZty1Hr66H0pYU" 
+                />
+                <div className="absolute inset-0 p-6 pointer-events-none">
+                  <svg className="absolute top-0 left-0 w-full h-full" style={{ zIndex: 10 }}>
+                    <path className="opacity-60" d="M 100 250 Q 200 150 350 100 T 500 150" fill="none" stroke="#f26c0d" strokeDasharray="5,5" strokeWidth="2"></path>
+                    <circle cx="100" cy="250" fill="#f26c0d" r="4"></circle>
+                    <circle cx="500" cy="150" fill="#f26c0d" r="4"></circle>
+                  </svg>
+                  
+                  {/* Hub Marker 1 */}
+                  <div className="absolute top-1/2 left-1/4 transform -translate-x-1/2 -translate-y-1/2 group pointer-events-auto cursor-pointer">
+                    <div className="w-4 h-4 bg-primary rounded-full relative">
+                      <div className="absolute inset-0 bg-primary rounded-full animate-ping opacity-75"></div>
+                    </div>
+                  </div>
+                  
+                  {/* Hub Marker 2 */}
+                  <div className="absolute top-1/3 right-1/4 transform -translate-x-1/2 -translate-y-1/2 group pointer-events-auto cursor-pointer">
+                    <div className="w-3 h-3 bg-white rounded-full"></div>
+                  </div>
+                  
+                  <div className="absolute bottom-4 left-4 bg-background-dark/90 backdrop-blur border border-white/10 p-4 rounded-lg shadow-lg max-w-xs pointer-events-auto">
+                    <h4 className="text-white font-bold text-sm mb-1">Route: North Jos</h4>
+                    <div className="flex items-center text-xs text-green-400 mb-2">
+                      <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span> Active Now
+                    </div>
+                    <p className="text-xs text-gray-400">Truck #OB-44 is currently near University of Jos. ETA to next stop: 15 mins.</p>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+            
+            <div className="order-1 lg:order-2">
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+              >
+                <div className="inline-flex items-center gap-2 text-primary font-bold uppercase tracking-wider text-sm mb-4">
+                  <span className="material-icons text-lg">local_shipping</span> Logistics Network
+                </div>
+                <h2 className="text-3xl md:text-4xl font-bold text-white mb-6 font-display">Precision Delivery Across The Plateau</h2>
+                <p className="text-gray-400 text-lg mb-8 leading-relaxed">
+                  Our dedicated fleet ensures your wholesale orders arrive fresh and on schedule. We operate specialized routes for schools, hotels, and retail partners with real-time tracking capabilities.
+                </p>
+                <ul className="space-y-6">
+                  <WholesaleFeature icon="schedule" title="Scheduled Windows" desc="Choose from Morning (6AM-9AM) or Afternoon (2PM-5PM) delivery slots guaranteed." />
+                  <WholesaleFeature icon="thermostat" title="Climate Controlled" desc="Our vans are equipped to maintain optimal temperature for pastries and sensitive items." />
+                </ul>
+              </motion.div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Section 4: Event Inquiry */}
+      <section className="py-24 bg-background-dark border-t border-white/5">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 font-display">Plan Your Event Catering</h2>
+            <p className="text-gray-400">Tell us about your occasion. We'll craft the perfect bakery menu.</p>
+          </div>
+          
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="bg-[#2c1f17] rounded-2xl border border-white/10 shadow-2xl overflow-hidden"
+          >
+            <div className="bg-[#3a2a20] h-2 w-full">
+              <div className="bg-primary h-full w-2/3" role="progressbar"></div>
+            </div>
+            <div className="p-8 md:p-12">
+              <div className="flex justify-between items-center mb-8 text-sm text-gray-400">
+                <span className="text-primary font-bold">Step 2 of 3</span>
+                <span>Event Details</span>
+              </div>
+              <form className="space-y-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <WholesaleFormField label="Event Type" type="select" options={['Wedding Reception', 'Corporate Gala', 'Birthday Party', 'Conference']} />
+                  <WholesaleFormField label="Event Date" type="date" />
+                  <WholesaleFormField label="Expected Guests" type="number" placeholder="e.g. 250" />
+                  <WholesaleFormField label="Budget Range (Ã¢â€šÂ¦)" type="select" options={['Ã¢â€šÂ¦100k - Ã¢â€šÂ¦250k', 'Ã¢â€šÂ¦250k - Ã¢â€šÂ¦500k', 'Ã¢â€šÂ¦500k+']} />
+                </div>
+                
+                <div className="flex items-center justify-between p-4 bg-primary/5 border border-primary/20 rounded-lg">
+                  <div>
+                    <h4 className="text-white font-bold">Schedule a Tasting Session?</h4>
+                    <p className="text-xs text-gray-400">Visit our HQ to sample selected menu items before finalizing.</p>
+                  </div>
+                  <label className="relative inline-flex items-center cursor-pointer">
+                    <input defaultChecked className="sr-only peer" type="checkbox" />
+                    <div className="w-11 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                  </label>
+                </div>
+                
+                <div className="flex justify-between items-center pt-6 border-t border-white/10">
+                  <button className="text-gray-400 hover:text-white font-medium px-6 py-2" type="button">Back</button>
+                  <button className="bg-primary text-white font-bold px-8 py-3 rounded-lg hover:bg-primary/90 shadow-lg shadow-primary/20 transition-all transform active:scale-95" type="button">
+                    Continue to Menu Selection
+                  </button>
+                </div>
+              </form>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Section 5: Trust Pillars */}
+      <section className="py-20 bg-[#2c1f17] border-t border-white/5">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+            <TrustPillar icon="verified_user" iconColor="text-green-500" title="NAFDAC Certified" desc="Fully compliant with all national food safety regulations. Reg No: A1-4589L." />
+            <div className="flex flex-col items-center">
+              <div className="h-24 w-24 rounded-full bg-primary/10 flex items-center justify-center border-2 border-primary mb-6 relative">
+                <div className="absolute inset-0 border border-primary rounded-full animate-ping opacity-20"></div>
+                <span className="font-bold text-2xl text-primary tracking-tighter">NAIJA<br/>MADE</span>
+              </div>
+              <h3 className="text-xl font-bold text-white mb-2">Proudly Nigerian</h3>
+              <p className="text-gray-400 text-sm max-w-xs">Sourcing 90% of our flour and ingredients from local farmers in Northern Nigeria.</p>
+            </div>
+            <TrustPillar icon="workspace_premium" iconColor="text-blue-400" title="Premium Standards" desc="ISO 9001:2015 compliant processes ensuring consistency in every loaf." />
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+};
+
+const WholesaleRow: React.FC<{ sku: string; name: string; price: string; stock: string; stockColor: string; defaultQty: number; bg?: boolean }> = ({ sku, name, price, stock, stockColor, defaultQty, bg }) => (
+  <tr className={`hover:bg-white/5 transition-colors ${bg ? 'bg-white/[0.02]' : ''}`}>
+    <td className="px-6 py-5 font-mono text-primary text-xs">{sku}</td>
+    <td className="px-6 py-5 font-medium text-white">{name}</td>
+    <td className="px-6 py-5 text-right font-semibold text-gray-200">{price}</td>
+    <td className={`px-6 py-5 text-center font-bold ${stockColor}`}>{stock}</td>
+    <td className="px-6 py-5 text-center">
+      <input className="w-20 bg-background-dark border border-white/10 rounded px-2 py-1 text-center text-white focus:ring-primary focus:border-primary text-sm outline-none" min="1" type="number" defaultValue={defaultQty} />
+    </td>
+    <td className="px-6 py-5 text-right">
+      <button className="text-primary hover:text-white transition transform active:scale-75">
+        <span className="material-icons">add_shopping_cart</span>
+      </button>
+    </td>
+  </tr>
+);
+
+const WholesaleFeature: React.FC<{ icon: string; title: string; desc: string }> = ({ icon, title, desc }) => (
+  <li className="flex items-start">
+    <div className="flex-shrink-0 h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center text-primary mt-1">
+      <span className="material-icons">{icon}</span>
+    </div>
+    <div className="ml-4">
+      <h4 className="text-lg font-bold text-white font-display">{title}</h4>
+      <p className="text-gray-400 text-sm leading-relaxed">{desc}</p>
+    </div>
+  </li>
+);
+
+const WholesaleFormField: React.FC<{ label: string; type: string; options?: string[]; placeholder?: string }> = ({ label, type, options, placeholder }) => (
+  <div className="space-y-2">
+    <label className="block text-sm font-medium text-gray-300">{label}</label>
+    {type === 'select' ? (
+      <select className="block w-full bg-background-dark border border-white/20 rounded-lg text-white py-3 px-4 focus:ring-2 focus:ring-primary focus:border-transparent outline-none appearance-none">
+        {options?.map(opt => <option key={opt}>{opt}</option>)}
+      </select>
+    ) : (
+      <input 
+        type={type} 
+        placeholder={placeholder}
+        className="block w-full bg-background-dark border border-white/20 rounded-lg text-white py-3 px-4 focus:ring-2 focus:ring-primary focus:border-transparent outline-none" 
+      />
+    )}
+  </div>
+);
+
+const TrustPillar: React.FC<{ icon: string; title: string; desc: string; iconColor: string }> = ({ icon, title, desc, iconColor }) => (
+  <div className="flex flex-col items-center">
+    <div className="h-20 w-20 rounded-full bg-white/5 flex items-center justify-center border-2 border-white/10 mb-6">
+      <span className={`material-icons text-4xl ${iconColor}`}>{icon}</span>
+    </div>
+    <h3 className="text-xl font-bold text-white mb-2 font-display">{title}</h3>
+    <p className="text-gray-400 text-sm max-w-xs">{desc}</p>
+  </div>
+);
+
+export default Wholesale;
+
+*/
+
+/* --- FILE: orient-bakery-hub (1)\pages\Story.tsx --- */
+/*
+
+import React from 'react';
+import { motion } from 'framer-motion';
+
+const Story: React.FC = () => {
+  return (
+    <div className="bg-background-light dark:bg-background-dark overflow-x-hidden">
+      {/* 1. Hero Header - Jos's Morning Ritual */}
+      <section className="relative h-screen min-h-[700px] flex items-center justify-center overflow-hidden bg-stone-900">
+        <div className="absolute inset-0 z-0">
+          <img 
+            alt="Baker dusting flour on dough" 
+            className="w-full h-full object-cover opacity-60 grayscale-[30%]" 
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6SG_V94G3jAOPP14HMgaAc2y6fE1y54l-T9C_E8xI1lee7tUiF_qJrO8kXpExWPXmuyi8aqoigi93IDoakFe7g9F7qjyPpIDuf5zvLq-T9HQck89ar2rvOtJOWbapiebrimVajx_o7xAq0UfknDkv0sjaGWYqUmPn7GOzTdfsSZqTNiJPRV2YdCQ87VO5yahIhmngNShbsfl5AgO4_w5JoN1TT8lQmCaRisnMIBX9YW4YySXwnKh-Uwv2ioOH1i39jT1EUr1eVcIX" 
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-stone-900/20 to-stone-900"></div>
+        </div>
+        <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
+          <motion.h1 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1 }}
+            className="font-serif text-6xl md:text-8xl lg:text-9xl text-white font-bold mb-6"
+          >
+            JosÃ¢â‚¬â„¢s Morning Ritual
+          </motion.h1>
+          <motion.p 
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ delay: 0.5, duration: 1 }}
+            className="text-stone-300 text-xl md:text-2xl font-light tracking-[0.2em] uppercase"
+          >
+            Hot, fresh, and ready by 7:00 AM.
+          </motion.p>
+        </div>
+      </section>
+
+      {/* 2. The Artisanal Process - Staggered Organic Sections */}
+      <section className="py-32 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div className="text-center mb-24">
+          <h2 className="font-serif text-5xl md:text-6xl text-text-coffee dark:text-white mb-4">The Artisanal Process</h2>
+          <div className="w-24 h-1 bg-primary mx-auto"></div>
+        </div>
+
+        <div className="space-y-32 md:space-y-64">
+          {/* Step 1 */}
+          <ProcessStep 
+            index={1}
+            title="45-Hour Fermentation"
+            desc="Slow fermentation ensures a rich, complex flavor and a texture that is light yet substantial. Every batch is nurtured over two days to ensure maximum health benefits and depth."
+            image="https://lh3.googleusercontent.com/aida-public/AB6AXuD9AdQcTD0npuPqeB1MkUOpzNcQ_bmlr55FObJd7BiXSrLsv21dC8nYt7TMtdWa9rUF2xR7Dv7ZjA8VTXqcWt961UQEfZIsle-QgyvY-W_l2FdtGhXgDxcPC7BVvYBlihw6uwo8qGfPj1HFG0LUTU-6-xUllZRQ_sNuGDnDR1ndaGj4QlDrwzLDNnx8NFDEk9xAUKMJzSBMJ4EdWxutNIiONZeeTQDLxyIdSsUImu6287f0OhweUM6HW_lF5K8CBEnwGxwdvygXaPFT"
+            reverse
+          />
+          {/* Step 2 */}
+          <ProcessStep 
+            index={2}
+            title="48-Hour Fermentation"
+            desc="Our signature sourdough culture is exactly what makes our bread unique. Patience is our primary ingredient, allowing the wild yeast to transform simple flour into something extraordinary."
+            image="https://lh3.googleusercontent.com/aida-public/AB6AXuA8jmr4oztTQ8QwKXjjb4cQPlKaOB4R-eWMBq8_Csa1ENWeji-HcmhbUesMcE8hbj-0Ax3JZhTLc0GyCOeRcwrbYzTViEqywn3R_2-SthdRopZVMVTNZ1WqnQBr8-LK7OnNKYx4rWuj8_szD_q6-mKdt56d1BeZHSURh5EXpjkKwfe7LNALEI6xpoF0MENRWl-MIwX0My0xHjChEy7JhmtHGr-AYk4l1f6dCEOxq-0Ep04yKLYygUtXUhb5RozBayayNVk-Lug0tPjj"
+          />
+          {/* Step 3 */}
+          <ProcessStep 
+            index={3}
+            title="Skillfully Scored"
+            desc="The scoring isn't just aesthetic; it allows the bread to expand perfectly in the oven. Each loaf is hand-scored with precision to create the iconic crust and ear we are known for."
+            image="https://lh3.googleusercontent.com/aida-public/AB6AXuAnDkmQLViId92Xb5EIwK923g9s4vEyP7kRlaoy-PSt-Q5O0XHMLFkbPtmcHArRNuxNfF0tn5WpSr4cadPNsC7b9MCBCn1LdhvH_CGIUR-ktHXG4FsOH1apFckqn7x4tnXxB0QVPJDycxVhTK2kWSOBdfFrldA95svT7P3iGydLOAxlyeiM07nPh86t_cM1naYI95F7GOQFfRaCn9oTK5SHmBnOS5QQKAPj7G81IFRGKK6nMwwdbaX0m0WZrSvRW8-rJDYLC9zGGoUC"
+            reverse
+          />
+          {/* Step 4 */}
+          <ProcessStep 
+            index={4}
+            title="The Final Bake"
+            desc="Controlled heat and steam are the final elements. Our ovens are timed precisely to capture the peak of the oven-spring, resulting in a thin, crisp, caramelized crust."
+            image="https://lh3.googleusercontent.com/aida-public/AB6AXuCd_TmNBtFRIqwh5bh7iSlOdqRDJSGJVKP1T-3YCFoq-WnNanHo6WbBuRXRvvs8tGQSZK1dZn6I3a6iJHL4byM9r5DC26JFjA7U9s_o2o2ia367BS2gVpc2LHYMwm5e_UPo_r_GPIZKyQHnoR8vXlbdPWdS5z5SZxXQd68-5uWq1QMGTj01wNIGMZG1jB4PPdc9XAUU0ZRvEHw44Sdxiw4c5TdmJpuXivg3eodT1I-xcIyM6u9Br9l8Z00zpX_O4pUx_7yGlsf2Knwr"
+          />
+        </div>
+      </section>
+
+      {/* 3. Interactive Items Grid */}
+      <section className="py-24 bg-stone-50 dark:bg-stone-900/50">
+        <div className="max-w-7xl mx-auto px-4 grid lg:grid-cols-2 gap-16 items-center">
+          <div className="space-y-8">
+            <h2 className="font-serif text-5xl text-text-coffee dark:text-white leading-tight">Interactive Items</h2>
+            <p className="text-lg text-stone-500 leading-relaxed max-w-lg">
+              Great products start with great ingredients. Every component of our pastries is selected for its origin and quality, from Madagascar vanilla beans to local farm-fresh eggs.
+            </p>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="aspect-square bg-white dark:bg-stone-800 rounded-2xl p-6 shadow-sm flex flex-col justify-end group hover:bg-primary transition-all duration-500 cursor-pointer">
+                <span className="material-icons text-primary group-hover:text-white mb-4 text-3xl">local_florist</span>
+                <p className="font-bold dark:text-white group-hover:text-white">Organic Flour</p>
+              </div>
+              <div className="aspect-square bg-white dark:bg-stone-800 rounded-2xl p-6 shadow-sm flex flex-col justify-end group hover:bg-primary transition-all duration-500 cursor-pointer">
+                <span className="material-icons text-primary group-hover:text-white mb-4 text-3xl">water_drop</span>
+                <p className="font-bold dark:text-white group-hover:text-white">Filtered Water</p>
+              </div>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBO0ZKFr0Vq3u2qIGbwTklVk1NRf5LudR3o-9VQzWsVuBWiMBm3gxTiHb7qBh3fYEk0cekwvM0yU9p15-SjoL5kWnxf9mWHV_5_ZsKyOsTlIJOJb_pOnEf4EfjaMOCSP9Tc4-jCtBART-M6O0BPS3TdgOAMoa9e2TH5TVRHZXhD8zWBsvjqg0_T7ylozMovy05X9SAfSvH6TlwHSA4bdT0PmjMrzw3T37Zh7kynz6ox1Xp0FwJrkOXYmvuQBHfAO9m9x-S4TWUZZ3th" className="rounded-2xl w-full h-80 object-cover" alt="Pastry item" />
+            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuB3ePjwRPlUyPcBB-gEiNv8MkH16tu35a6aB6_9Zj6vvtAjNzfpPl3j9BZxEiFIodTQCe9Zyw5LOmhozbuIXP9okz3ngRIWl4rKMS0SKUkOmK6mttKGX1C0orlgu70xhnIsPKsKFQHKXqBCEG3fDWZZyFyXYR9JfQecs2L1EYLc-A8kNIM_-KsioMgNvsvR0T2bdRbRNnU00mKgnsB7VshRYE5j0sjBCg60QWs45waEvck39YPu_VtdDweJzzP-3pE_auMe0BbiyI3c" className="rounded-2xl w-full h-80 object-cover mt-12" alt="Bread item" />
+          </div>
+        </div>
+      </section>
+
+      {/* 4. Interactive Daily Selection - The Cinnamon Rolls Grid */}
+      <section className="py-32 max-w-7xl mx-auto px-4">
+        <div className="text-center mb-16">
+          <h2 className="font-serif text-5xl dark:text-white mb-8">Interactive Daily Selection</h2>
+          <div className="flex justify-center gap-4">
+            {['All', 'Bread', 'Pastries', 'Savory'].map((cat, i) => (
+              <button key={cat} className={`px-6 py-2 rounded-full text-sm font-bold ${i === 0 ? 'bg-primary text-white' : 'bg-stone-200 text-stone-600'}`}>
+                {cat}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <RollCard title="Sticky Cinnamon Roll" price="$12.00" image="https://lh3.googleusercontent.com/aida-public/AB6AXuCd_TmNBtFRIqwh5bh7iSlOdqRDJSGJVKP1T-3YCFoq-WnNanHo6WbBuRXRvvs8tGQSZK1dZn6I3a6iJHL4byM9r5DC26JFjA7U9s_o2o2ia367BS2gVpc2LHYMwm5e_UPo_r_GPIZKyQHnoR8vXlbdPWdS5z5SZxXQd68-5uWq1QMGTj01wNIGMZG1jB4PPdc9XAUU0ZRvEHw44Sdxiw4c5TdmJpuXivg3eodT1I-xcIyM6u9Br9l8Z00zpX_O4pUx_7yGlsf2Knwr" />
+          <RollCard title="Cinnamon Rolls (Fresh)" price="$12.00" image="https://lh3.googleusercontent.com/aida-public/AB6AXuDYvf77WkTzo48ZPbJwUbQetCY5GnPm0VNmBHX0NT52ceOmSMsQZHiYsq9NcCufvHkW87mOr6Z7DTgftYf8q1h6AHQM8XNZeZnPrLJoJNhWZvwsRgqxS8vOeeR2JCDpJoMJqdY6l7G-xynMPgrNZX3i-mBcBfzq3YlV640wg5x5BjcnS_G_UbOryxsD1iSmAv08WogejIlucFklzxkv2CI0kfa_ilSMPwqWo6-tr1Z6Wd7aoOqW5gpClZIalrlkkyU4U9a7i9ViNPEd" />
+          <RollCard title="Sticky Cinnamon Roll" price="$15.00" image="https://lh3.googleusercontent.com/aida-public/AB6AXuCzuTGeynABEZq_RNMW_0DWnpySiwUdY708i6ZVWjZ7aIl0DpPLMJq1VQVEwuiE3nMamKg_bwuczTqbcV6ecYVDUXjY9SZK519_nntwfz9HAhku_iqDi_Ef3RUdWrVu9jrh-MWAyUVc-FKp3_XCiyFx_P2OM-jDXRGULnYJqVqUqqx6jyHp_XoHc7SCS-NUZMRZsCvKWvMaSW8Dsah1KUa05a9i3V7cPWokidQYzWZ7hkP9T04I1yuxLjt0g6HhgWkppOALuJnR6wrU" />
+          <RollCard title="Cinnamon Rolls" price="$18.50" image="https://lh3.googleusercontent.com/aida-public/AB6AXuCye9YH_o_PRcnhP-s4c_Ay_E9zoNz1oReHKAlsEWfNNc7YuV1Ha_6yYsqEUNMItX38C0VGq1fAUZNac96Mv6pe6yEH50CBl63aS0HNTNeWMPszVliMAlJsLceV2USAOc-QqVgcYwFhNWDkWc-U21cu4YBhsJY4vLKePO8OOJu4Ob-3FXxKeGeeC0ntOXjwSXivoh7nmf_8bN0KAJXnAI1QrUdSzNf-eKfwDlmUyKwpzDVdMYGPCLtqb1ExbXZnDi5J0HvGIlco5PcP" />
+        </div>
+      </section>
+
+      {/* 5. Signature 3D Showcase */}
+      <section className="py-32 bg-stone-50 dark:bg-stone-900 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 text-center">
+          <h2 className="font-serif text-5xl md:text-6xl dark:text-white mb-16">Signature 3D Showcase</h2>
+          <div className="relative inline-block group">
+            <motion.div 
+              animate={{ y: [0, -20, 0] }}
+              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+              className="relative z-10"
+            >
+              <img 
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBO0ZKFr0Vq3u2qIGbwTklVk1NRf5LudR3o-9VQzWsVuBWiMBm3gxTiHb7qBh3fYEk0cekwvM0yU9p15-SjoL5kWnxf9mWHV_5_ZsKyOsTlIJOJb_pOnEf4EfjaMOCSP9Tc4-jCtBART-M6O0BPS3TdgOAMoa9e2TH5TVRHZXhD8zWBsvjqg0_T7ylozMovy05X9SAfSvH6TlwHSA4bdT0PmjMrzw3T37Zh7kynz6ox1Xp0FwJrkOXYmvuQBHfAO9m9x-S4TWUZZ3th" 
+                className="w-full max-w-md mx-auto drop-shadow-[0_35px_35px_rgba(0,0,0,0.3)]"
+                alt="Signature cake"
+              />
+            </motion.div>
+            {/* Floaties */}
+            <div className="absolute inset-0 pointer-events-none">
+              <span className="material-icons text-primary absolute top-0 left-0 animate-bounce">local_florist</span>
+              <span className="material-icons text-primary absolute top-10 right-0 animate-pulse">grain</span>
+              <span className="material-icons text-primary absolute bottom-0 left-10 animate-pulse">spa</span>
+            </div>
+          </div>
+          <div className="mt-12 flex justify-center items-center gap-8">
+            <div className="flex gap-4">
+              <button className="w-10 h-10 rounded-full border border-stone-300 flex items-center justify-center hover:bg-primary hover:text-white transition-all"><span className="material-icons">chevron_left</span></button>
+              <button className="w-10 h-10 rounded-full border border-stone-300 flex items-center justify-center hover:bg-primary hover:text-white transition-all"><span className="material-icons">chevron_right</span></button>
+            </div>
+            <button className="bg-primary text-white px-8 py-3 rounded-full font-bold shadow-lg shadow-primary/30 hover:bg-orange-600 transform hover:scale-105 active:scale-95 transition-all">
+              Customize & Order $85.00
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* 6. Catering & Bulk */}
+      <section className="py-32 bg-background-dark text-white relative">
+        <div className="max-w-7xl mx-auto px-4">
+          <h2 className="font-serif text-5xl md:text-6xl text-center mb-24">Catering & Bulk</h2>
+          <div className="grid md:grid-cols-3 gap-8">
+            <CateringCard 
+              title="Corporate" 
+              desc="Corporate event photography and catering tailored to your brand."
+              image="https://lh3.googleusercontent.com/aida-public/AB6AXuBF_lco6zprEdQlI2LmcDLCSaXVyBB8sfTNRNQBZtPsBrXL6WpfVvb_Rhvg8zDIa-fYvgnDxVUQX-66V4dPxxANmhZdEaMyMlV1R2DZ5AvRfCgjRipVcBIS0HCdHjN5qrXr4CObMPzHS9HXJQHExewlvcHHpf8PDRLfpxYmjw0LFXE-88dpfDQfpkEWHnfqTD6V9dipw-i5Jl4N7SbYSfjM_StPM4T9Y6ww6OIWhf4iWRpr7Utv6DsIBvyjVA64s7c4Ye0yc2R8DPrQ"
+              cta="Download Menu"
+            />
+            <CateringCard 
+              title="Events" 
+              desc="Delectable event photography for your most precious moments."
+              image="https://lh3.googleusercontent.com/aida-public/AB6AXuDjgjqXBUvUI7yxu18cPbEjS1s8IUe5XW_xHaLIr4rMKNABX4YLBU9wyfc9jzXS_72wgh3LEygdAFzWawbgEYl9l56K5jKVevcNj53uFFdozb_fX16MgMXoIUZwbAjcZ3acr816xSDxII3_ETinK7g6fECd9YjnMfzQOZ4a8ETC6ChJfm8vduGzxVmlbogc-Ye-GLnhimriXR1UlqtxeG2ghiYRw2UzyO00cHNlhx7xCNIn_hZyFk9W98hl0w4wRUCjriyWFFU4ZMIa"
+              cta="Inquire Now"
+              active
+            />
+            <CateringCard 
+              title="Wholesale" 
+              desc="Occasional event photography and bulk orders for your business."
+              image="https://lh3.googleusercontent.com/aida-public/AB6AXuAnDkmQLViId92Xb5EIwK923g9s4vEyP7kRlaoy-PSt-Q5O0XHMLFkbPtmcHArRNuxNfF0tn5WpSr4cadPNsC7b9MCBCn1LdhvH_CGIUR-ktHXG4FsOH1apFckqn7x4tnXxB0QVPJDycxVhTK2kWSOBdfFrldA95svT7P3iGydLOAxlyeiM07nPh86t_cM1naYI95F7GOQFfRaCn9oTK5SHmBnOS5QQKAPj7G81IFRGKK6nMwwdbaX0m0WZrSvRW8-rJDYLC9zGGoUC"
+              cta="Learn More"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* 7. The Baker's Story (Editorial) */}
+      <section className="py-32 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <h2 className="font-serif text-5xl md:text-6xl text-center mb-16 dark:text-white">The BakerÃ¢â‚¬â„¢s Story</h2>
+        <div className="grid lg:grid-cols-2 gap-16 items-start">
+          <div className="space-y-12">
+            <div className="relative aspect-video rounded-3xl overflow-hidden shadow-2xl group cursor-pointer">
+              <img 
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6SG_V94G3jAOPP14HMgaAc2y6fE1y54l-T9C_E8xI1lee7tUiF_qJrO8kXpExWPXmuyi8aqoigi93IDoakFe7g9F7qjyPpIDuf5zvLq-T9HQck89ar2rvOtJOWbapiebrimVajx_o7xAq0UfknDkv0sjaGWYqUmPn7GOzTdfsSZqTNiJPRV2YdCQ87VO5yahIhmngNShbsfl5AgO4_w5JoN1TT8lQmCaRisnMIBX9YW4YySXwnKh-Uwv2ioOH1i39jT1EUr1eVcIX" 
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+                alt="Baker in kitchen" 
+              />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-20 h-20 bg-primary/90 text-white rounded-full flex items-center justify-center transform group-hover:scale-110 transition-transform">
+                  <span className="material-icons text-4xl">play_arrow</span>
+                </div>
+              </div>
+            </div>
+            <div className="p-8 border-l-4 border-primary bg-stone-50 dark:bg-stone-800 rounded-r-3xl">
+              <h3 className="font-serif text-3xl mb-4 dark:text-white">The Baker's Editorial</h3>
+              <p className="text-stone-500 italic">
+                "Baking is a conversation between the grains and the baker. Every loaf we make tells the story of the farmer who grew the wheat, the water that fed it, and the fire that transformed it."
+              </p>
+            </div>
+          </div>
+          <div className="prose prose-lg dark:prose-invert">
+            <p className="text-xl text-stone-600 dark:text-stone-300 leading-relaxed font-serif">
+              When I first started this journey in the heart of Jos, I had nothing but a handful of family recipes and a persistent dream of bringing artisan quality to every breakfast table. Today, Orient Bakery is more than just a place to buy bread; it's a testament to the community that supported us.
+            </p>
+            <p className="text-stone-500 leading-relaxed">
+              We sourcing 90% of our ingredients locally because we believe the soil of Northern Nigeria produces grains that are unparalleled in flavor and nutrition. Our 48-hour fermentation isn't a marketing tactic; it's a commitment to your health and the integrity of the process.
+            </p>
+            <div className="flex gap-4 mt-12">
+              <img className="w-20 h-20 rounded-2xl object-cover" src="https://picsum.photos/200" alt="Baker portrait" />
+              <div>
+                <p className="font-bold text-2xl dark:text-white">Jos O.</p>
+                <p className="text-primary font-bold uppercase tracking-widest text-sm">Founder & CEO</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 8. Detailed Footer - Incorporated into Story for visual flow */}
+      <footer className="bg-stone-100 dark:bg-stone-900 py-24 border-t border-stone-200 dark:border-stone-800">
+        <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-12">
+          <div className="space-y-6">
+            <h4 className="font-serif text-2xl dark:text-white">Good Choice</h4>
+            <p className="text-stone-500 text-sm">Orient Bakery Nigeria Ltd. Ahmadu Bello Way, Jos. Quality you can trust.</p>
+          </div>
+          <div>
+            <h4 className="font-bold mb-6 text-stone-400 uppercase text-xs tracking-widest">About Us</h4>
+            <ul className="space-y-4 text-sm text-stone-600 dark:text-stone-300">
+              <li>Our Legacy</li>
+              <li>Sourcing</li>
+              <li>Sustainability</li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-bold mb-6 text-stone-400 uppercase text-xs tracking-widest">Inspiration</h4>
+            <ul className="space-y-4 text-sm text-stone-600 dark:text-stone-300">
+              <li>Recipes</li>
+              <li>Events</li>
+              <li>Workshops</li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-bold mb-6 text-stone-400 uppercase text-xs tracking-widest">Follow Us</h4>
+            <div className="flex gap-4">
+              <div className="w-10 h-10 rounded-full border border-stone-300 flex items-center justify-center text-stone-500 hover:text-primary hover:border-primary transition-all cursor-pointer"><span className="material-icons">facebook</span></div>
+              <div className="w-10 h-10 rounded-full border border-stone-300 flex items-center justify-center text-stone-500 hover:text-primary hover:border-primary transition-all cursor-pointer"><span className="material-icons text-xl">camera_alt</span></div>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+};
+
+const ProcessStep: React.FC<{ index: number; title: string; desc: string; image: string; reverse?: boolean }> = ({ index, title, desc, image, reverse }) => (
+  <div className={`flex flex-col md:flex-row items-center gap-12 ${reverse ? 'md:flex-row-reverse' : ''}`}>
+    <motion.div 
+      initial={{ opacity: 0, x: reverse ? 50 : -50 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ once: true }}
+      className="w-full md:w-1/2 relative group"
+    >
+      <div 
+        className="w-full h-[300px] md:h-[500px] overflow-hidden shadow-2xl transition-all duration-700 group-hover:scale-[1.02]" 
+        style={{ 
+          borderRadius: reverse ? '30% 70% 70% 30% / 30% 30% 70% 70%' : '70% 30% 30% 70% / 60% 40% 60% 40%',
+          clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0% 100%)' // Simplification for safety, using border-radius for blob look
+        }}
+      >
+        <img src={image} className="w-full h-full object-cover grayscale-[20%] group-hover:grayscale-0 transition-all duration-700" alt={title} />
+      </div>
+      <div className="absolute -bottom-8 -right-8 md:-bottom-12 md:-right-12 text-stone-100/10 dark:text-white/5 font-serif text-9xl pointer-events-none">0{index}</div>
+    </motion.div>
+    <motion.div 
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      className="w-full md:w-1/2 space-y-6"
+    >
+      <span className="text-primary font-bold uppercase tracking-widest text-sm block">Artisan Notes</span>
+      <h3 className="font-serif text-4xl md:text-5xl text-text-coffee dark:text-white">{title}</h3>
+      <p className="text-lg text-stone-500 leading-relaxed font-light">{desc}</p>
+      <button className="text-primary font-bold flex items-center gap-2 hover:translate-x-2 transition-transform">
+        Read the science <span className="material-icons">arrow_forward</span>
+      </button>
+    </motion.div>
+  </div>
+);
+
+const RollCard: React.FC<{ title: string; price: string; image: string }> = ({ title, price, image }) => (
+  <motion.div 
+    whileHover={{ y: -10 }}
+    className="bg-white dark:bg-stone-800 rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 border border-stone-100 dark:border-stone-700"
+  >
+    <div className="relative h-64 overflow-hidden">
+      <img src={image} className="w-full h-full object-cover" alt={title} />
+      <div className="absolute top-4 right-4 bg-primary text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg">New</div>
+    </div>
+    <div className="p-6">
+      <h4 className="font-serif text-xl mb-1 dark:text-white">{title}</h4>
+      <p className="text-primary font-bold">{price}</p>
+    </div>
+  </motion.div>
+);
+
+const CateringCard: React.FC<{ title: string; desc: string; image: string; cta: string; active?: boolean }> = ({ title, desc, image, cta, active }) => (
+  <div className={`p-8 rounded-[40px] transition-all duration-500 ${active ? 'bg-primary scale-105 shadow-[0_30px_60px_rgba(236,109,19,0.4)]' : 'bg-stone-800 hover:bg-stone-700'}`}>
+    <div className="aspect-video rounded-3xl overflow-hidden mb-8 shadow-inner">
+      <img src={image} className="w-full h-full object-cover opacity-80" alt={title} />
+    </div>
+    <div className="flex items-center gap-4 mb-4">
+      <span className="material-icons text-3xl">{title === 'Corporate' ? 'business' : title === 'Events' ? 'celebration' : 'local_shipping'}</span>
+      <h3 className="text-2xl font-serif font-bold">{title}</h3>
+    </div>
+    <p className={`text-sm mb-8 leading-relaxed ${active ? 'text-white' : 'text-stone-400'}`}>{desc}</p>
+    <button className={`w-full py-4 rounded-2xl font-bold transition-all ${active ? 'bg-white text-primary' : 'bg-stone-900 text-white hover:bg-black'}`}>
+      {cta}
+    </button>
+  </div>
+);
+
+export default Story;
+
+*/
+</body>
+</html>
