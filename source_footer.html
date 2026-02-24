@@ -1,0 +1,88 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Source Code: source_footer.html</title>
+    <style>
+        body { background: #1a1a1a; color: #d4d4d4; font-family: monospace; padding: 2rem; }
+        h1 { color: #ec6d13; border-bottom: 2px solid #333; padding-bottom: 1rem; }
+        pre { background: #000; padding: 1.5rem; border-radius: 8px; overflow-x: auto; border: 1px solid #333; }
+        .back-link { display: inline-block; margin-bottom: 1rem; color: #888; text-decoration: none; }
+        .back-link:hover { color: #fff; }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-link"> Back to Challenge</a>
+    <h1>Original React Code: orient-bakery-hub (1)\components\Footer.tsx</h1>
+    <pre>
+import React from 'react';
+
+const Footer: React.FC = () =&gt; {
+  return (
+    &lt;footer className="bg-black text-white py-20 border-t border-gray-900"&gt;
+      &lt;div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-12"&gt;
+        &lt;div className="space-y-6"&gt;
+          &lt;div className="flex items-center gap-2"&gt;
+            &lt;span className="material-icons text-primary text-3xl"&gt;bakery_dining&lt;/span&gt;
+            &lt;span className="text-xl font-bold uppercase tracking-tight"&gt;Orient Bakery&lt;/span&gt;
+          &lt;/div&gt;
+          &lt;p className="text-gray-500 text-sm leading-relaxed"&gt;
+            Leading the way in artisanal baking and event catering since 1998. Freshly baked daily, with passion.
+          &lt;/p&gt;
+          &lt;div className="flex gap-4"&gt;
+            &lt;SocialIcon icon="facebook" /&gt;
+            &lt;SocialIcon icon="camera_alt" /&gt;
+            &lt;SocialIcon icon="place" /&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+        
+        &lt;div&gt;
+          &lt;h4 className="font-bold mb-6 text-gray-200"&gt;Shop&lt;/h4&gt;
+          &lt;ul className="space-y-4 text-sm text-gray-500"&gt;
+            &lt;li&gt;&lt;a href="#" className="hover:text-primary transition"&gt;Daily Menu&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a href="#" className="hover:text-primary transition"&gt;Custom Cakes&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a href="#" className="hover:text-primary transition"&gt;Wholesale Portal&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a href="#" className="hover:text-primary transition"&gt;Bulk Orders&lt;/a&gt;&lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+
+        &lt;div&gt;
+          &lt;h4 className="font-bold mb-6 text-gray-200"&gt;Our Bakery&lt;/h4&gt;
+          &lt;ul className="space-y-4 text-sm text-gray-500"&gt;
+            &lt;li&gt;&lt;a href="#" className="hover:text-primary transition"&gt;Our Story&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a href="#" className="hover:text-primary transition"&gt;Workshops&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a href="#" className="hover:text-primary transition"&gt;Locations&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a href="#" className="hover:text-primary transition"&gt;Sustainability&lt;/a&gt;&lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+
+        &lt;div&gt;
+          &lt;h4 className="font-bold mb-6 text-gray-200"&gt;Contact&lt;/h4&gt;
+          &lt;ul className="space-y-4 text-sm text-gray-500"&gt;
+            &lt;li className="flex items-center gap-2"&gt;&lt;span className="material-icons text-xs"&gt;location_on&lt;/span&gt; No. 45 Ahmadu Bello Way, Jos&lt;/li&gt;
+            &lt;li className="flex items-center gap-2"&gt;&lt;span className="material-icons text-xs"&gt;phone&lt;/span&gt; +234 800 ORIENT&lt;/li&gt;
+            &lt;li className="flex items-center gap-2"&gt;&lt;span className="material-icons text-xs"&gt;email&lt;/span&gt; fresh@orientbakery.ng&lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div className="max-w-7xl mx-auto px-4 mt-20 pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center gap-4 text-gray-600 text-xs"&gt;
+         &lt;p&gt;Â© 2024 Orient Bakery Nigeria Ltd. All rights reserved.&lt;/p&gt;
+         &lt;div className="flex gap-6"&gt;
+           &lt;a href="#" className="hover:text-gray-400"&gt;Privacy Policy&lt;/a&gt;
+           &lt;a href="#" className="hover:text-gray-400"&gt;Terms of Service&lt;/a&gt;
+         &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/footer&gt;
+  );
+};
+
+const SocialIcon: React.FC&lt;{ icon: string }&gt; = ({ icon }) =&gt; (
+  &lt;a href="#" className="text-gray-400 hover:text-primary transition-colors border border-gray-800 p-2 rounded-full flex items-center justify-center"&gt;
+    &lt;span className="material-icons text-xl"&gt;{icon}&lt;/span&gt;
+  &lt;/a&gt;
+);
+
+export default Footer;
+</pre>
+</body>
+</html>

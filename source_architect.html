@@ -1,0 +1,370 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Source Code: source_architect.html</title>
+    <style>
+        body { background: #1a1a1a; color: #d4d4d4; font-family: monospace; padding: 2rem; }
+        h1 { color: #ec6d13; border-bottom: 2px solid #333; padding-bottom: 1rem; }
+        pre { background: #000; padding: 1.5rem; border-radius: 8px; overflow-x: auto; border: 1px solid #333; }
+        .back-link { display: inline-block; margin-bottom: 1rem; color: #888; text-decoration: none; }
+        .back-link:hover { color: #fff; }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-link"> Back to Challenge</a>
+    <h1>Original React Code: orient-bakery-hub (1)\pages\Architect.tsx</h1>
+    <pre>
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+
+type ConfigState = {
+  tier: number;
+  flavor: string;
+  frosting: string;
+  toppings: string[];
+};
+
+const Architect: React.FC = () =&gt; {
+  const [step, setStep] = useState(1);
+  const [config, setConfig] = useState&lt;ConfigState&gt;({
+    tier: 2,
+    flavor: 'Vanilla',
+    frosting: 'Buttercream',
+    toppings: []
+  });
+
+  const tierOptions = [
+    { value: 1, label: 'Single Tier', price: 40, desc: 'Serves 10-15' },
+    { value: 2, label: 'Double Tier', price: 65, desc: 'Serves 25-30' },
+    { value: 3, label: 'Grand Tier', price: 95, desc: 'Serves 50+' },
+  ];
+
+  const flavorOptions = [
+    { name: 'Vanilla', color: 'none', filter: 'brightness(105%) sepia(20%)', desc: 'Madagascar Bean' },
+    { name: 'Chocolate', color: '#5D4037', filter: 'brightness(60%) sepia(80%) hue-rotate(340deg) saturate(150%)', desc: 'Belgian Dark' },
+    { name: 'Red Velvet', color: '#C62828', filter: 'brightness(80%) sepia(50%) hue-rotate(310deg) saturate(250%)', desc: 'Classic Southern' },
+    { name: 'Lemon', color: '#FBC02D', filter: 'brightness(100%) sepia(100%) hue-rotate(10deg) saturate(150%)', desc: 'Zesty Citrus' },
+  ];
+
+  const frostingOptions = [
+    { name: 'Buttercream', desc: 'Classic texture', icon: 'blur_on' },
+    { name: 'Fondant', desc: 'Smooth finish', icon: 'lens' },
+    { name: 'Naked', desc: 'Exposed layers', icon: 'texture' },
+  ];
+
+  const toppingOptions = [
+    { name: 'Berries', icon: 'ðŸ“', price: 5 },
+    { name: 'Flowers', icon: 'ðŸŒ¸', price: 8 },
+    { name: 'Gold Leaf', icon: 'âœ¨', price: 12 },
+    { name: 'Topper', icon: 'ðŸŽ‚', price: 10 },
+  ];
+
+  const handleToppingToggle = (name: string) =&gt; {
+    setConfig(prev =&gt; {
+      const exists = prev.toppings.includes(name);
+      return {
+        ...prev,
+        toppings: exists ? prev.toppings.filter(t =&gt; t !== name) : [...prev.toppings, name]
+      };
+    });
+  };
+
+  const calculateTotal = () =&gt; {
+    const tierPrice = tierOptions.find(t =&gt; t.value === config.tier)?.price || 0;
+    const toppingsPrice = config.toppings.reduce((acc, curr) =&gt; {
+      const top = toppingOptions.find(t =&gt; t.name === curr);
+      return acc + (top?.price || 0);
+    }, 0);
+    return tierPrice + toppingsPrice;
+  };
+
+  const currentFlavor = flavorOptions.find(f =&gt; f.name === config.flavor);
+
+  const nextStep = () =&gt; setStep(prev =&gt; Math.min(prev + 1, 4));
+  const prevStep = () =&gt; setStep(prev =&gt; Math.max(prev - 1, 1));
+  const jumpToStep = (s: number) =&gt; setStep(s);
+
+  return (
+    &lt;div className="h-[calc(100vh-80px)] flex overflow-hidden bg-background-light dark:bg-background-dark"&gt;
+      {/* Left Panel: 3D Viewport */}
+      &lt;section className="relative flex-grow h-full bg-[#f1f5f9] dark:bg-[#0f172a] flex items-center justify-center overflow-hidden group"&gt;
+        &lt;div className="relative w-full h-full flex items-center justify-center"&gt;
+          &lt;AnimatePresence mode='wait'&gt;
+            &lt;motion.div
+              key={config.tier + config.flavor} // Re-animate on major changes
+              initial={{ scale: 0.9, opacity: 0.8 }}
+              animate={{ 
+                scale: config.tier === 1 ? 0.8 : config.tier === 2 ? 1 : 1.2, 
+                opacity: 1 
+              }}
+              transition={{ type: "spring", stiffness: 100 }}
+              className="relative w-full h-full flex items-center justify-center"
+            &gt;
+               &lt;img 
+                alt="3D Cake Render" 
+                className="max-h-[70%] max-w-[80%] object-contain drop-shadow-2xl transition-all duration-700" 
+                style={{ 
+                   filter: currentFlavor?.filter || 'none',
+                   // Simulate frosting texture change slightly via contrast/brightness if needed
+                   opacity: config.frosting === 'Naked' ? 0.9 : 1
+                }}
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjgjqXBUvUI7yxu18cPbEjS1s8IUe5XW_xHaLIr4rMKNABX4YLBU9wyfc9jzXS_72wgh3LEygdAFzWawbgEYl9l56K5jKVevcNj53uFFdozb_fX16MgMXoIUZwbAjcZ3acr816xSDxII3_ETinK7g6fECd9YjnMfzQOZ4a8ETC6ChJfm8vduGzxVmlbogc-Ye-GLnhimriXR1UlqtxeG2ghiYRw2UzyO00cHNlhx7xCNIn_hZyFk9W98hl0w4wRUCjriyWFFU4ZMIa"
+              /&gt;
+              
+              {/* Overlay Toppings */}
+              &lt;div className="absolute inset-0 pointer-events-none"&gt;
+                {config.toppings.includes('Berries') &amp;&amp; (
+                  &lt;&gt;
+                     &lt;span className="absolute top-[35%] left-[45%] text-4xl animate-bounce" style={{ animationDuration: '3s' }}&gt;ðŸ“&lt;/span&gt;
+                     &lt;span className="absolute top-[40%] right-[42%] text-3xl animate-bounce" style={{ animationDuration: '4s' }}&gt;ðŸ“&lt;/span&gt;
+                     &lt;span className="absolute bottom-[40%] left-[38%] text-3xl"&gt;ðŸ“&lt;/span&gt;
+                  &lt;/&gt;
+                )}
+                {config.toppings.includes('Flowers') &amp;&amp; (
+                  &lt;&gt;
+                     &lt;span className="absolute top-[30%] right-[45%] text-4xl animate-pulse"&gt;ðŸŒ¸&lt;/span&gt;
+                     &lt;span className="absolute top-[50%] left-[40%] text-3xl"&gt;ðŸŒº&lt;/span&gt;
+                  &lt;/&gt;
+                )}
+                {config.toppings.includes('Gold Leaf') &amp;&amp; (
+                  &lt;div className="absolute inset-0 flex items-center justify-center"&gt;
+                    &lt;span className="absolute top-[32%] text-4xl animate-pulse text-yellow-400 opacity-60"&gt;âœ¨&lt;/span&gt;
+                    &lt;span className="absolute top-[45%] left-[40%] text-2xl animate-pulse text-yellow-400 opacity-60"&gt;âœ¨&lt;/span&gt;
+                  &lt;/div&gt;
+                )}
+                {config.toppings.includes('Topper') &amp;&amp; (
+                   &lt;span className="absolute top-[15%] left-[50%] transform -translate-x-1/2 text-6xl drop-shadow-lg"&gt;ðŸŽ‚&lt;/span&gt;
+                )}
+              &lt;/div&gt;
+            &lt;/motion.div&gt;
+          &lt;/AnimatePresence&gt;
+          
+          &lt;div className="absolute bottom-0 w-full h-1/2 bg-gradient-to-t from-black/5 to-transparent pointer-events-none"&gt;&lt;/div&gt;
+        &lt;/div&gt;
+
+        {/* View Controls */}
+        &lt;div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-white/70 dark:bg-gray-800/70 backdrop-blur-md rounded-full px-6 py-3 flex items-center gap-4 shadow-lg"&gt;
+          &lt;button className="p-2 hover:bg-primary/10 rounded-full transition-colors"&gt;&lt;span className="material-icons"&gt;rotate_left&lt;/span&gt;&lt;/button&gt;
+          &lt;div className="w-px h-4 bg-gray-300 dark:bg-gray-600"&gt;&lt;/div&gt;
+          &lt;button className="p-2 hover:bg-primary/10 rounded-full transition-colors"&gt;&lt;span className="material-icons"&gt;remove&lt;/span&gt;&lt;/button&gt;
+          &lt;span className="text-xs font-bold text-gray-500"&gt;100%&lt;/span&gt;
+          &lt;button className="p-2 hover:bg-primary/10 rounded-full transition-colors"&gt;&lt;span className="material-icons"&gt;add&lt;/span&gt;&lt;/button&gt;
+          &lt;div className="w-px h-4 bg-gray-300 dark:bg-gray-600"&gt;&lt;/div&gt;
+          &lt;button className="p-2 hover:bg-primary/10 rounded-full transition-colors"&gt;&lt;span className="material-icons"&gt;rotate_right&lt;/span&gt;&lt;/button&gt;
+        &lt;/div&gt;
+
+        {/* Toggles */}
+        &lt;div className="absolute top-6 right-6 flex flex-col gap-2"&gt;
+          &lt;IconButton icon="wb_sunny" /&gt;
+          &lt;IconButton icon="grid_4x4" /&gt;
+          &lt;IconButton icon="fullscreen" /&gt;
+        &lt;/div&gt;
+      &lt;/section&gt;
+
+      {/* Right Panel: Configurator */}
+      &lt;aside className="w-[450px] flex-none bg-white dark:bg-coffee-dark border-l border-gray-200 dark:border-white/10 flex flex-col shadow-2xl relative z-10"&gt;
+        &lt;div className="px-6 py-6 border-b border-gray-100 dark:border-white/5"&gt;
+          &lt;div className="flex justify-between items-center mb-2"&gt;
+            &lt;span className="text-xs font-bold text-primary uppercase tracking-wider"&gt;Step {step} of 4&lt;/span&gt;
+            &lt;span className="text-xs text-gray-400 font-mono"&gt;ID: #CA-8921&lt;/span&gt;
+          &lt;/div&gt;
+          &lt;div className="h-1.5 w-full bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden"&gt;
+            &lt;motion.div 
+              initial={{ width: 0 }}
+              animate={{ width: `${(step / 4) * 100}%` }}
+              className="h-full bg-primary rounded-full transition-all duration-500"
+            &gt;&lt;/motion.div&gt;
+          &lt;/div&gt;
+          &lt;div className="flex justify-between mt-2 text-[10px] font-medium text-gray-400"&gt;
+            &lt;span className={step &gt;= 1 ? 'text-primary' : ''}&gt;Base&lt;/span&gt;
+            &lt;span className={step &gt;= 2 ? 'text-primary' : ''}&gt;Flavor&lt;/span&gt;
+            &lt;span className={step &gt;= 3 ? 'text-primary' : ''}&gt;Frosting&lt;/span&gt;
+            &lt;span className={step &gt;= 4 ? 'text-primary' : ''}&gt;Accents&lt;/span&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;div className="flex-grow overflow-y-auto no-scrollbar px-6 py-8 space-y-6"&gt;
+          
+          {/* Step 1: Tier */}
+          {step === 1 &amp;&amp; (
+            &lt;motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}&gt;
+              &lt;h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6 font-display"&gt;Select Size &amp; Tier&lt;/h3&gt;
+              &lt;div className="space-y-3"&gt;
+                {tierOptions.map((tier) =&gt; (
+                  &lt;button
+                    key={tier.value}
+                    onClick={() =&gt; setConfig({...config, tier: tier.value})}
+                    className={`w-full p-4 rounded-xl border-2 text-left flex justify-between items-center transition-all ${
+                      config.tier === tier.value 
+                      ? 'border-primary bg-primary/5 dark:bg-primary/10' 
+                      : 'border-gray-200 dark:border-gray-700 hover:border-primary/50'
+                    }`}
+                  &gt;
+                    &lt;div&gt;
+                      &lt;span className="block font-bold text-gray-800 dark:text-white"&gt;{tier.label}&lt;/span&gt;
+                      &lt;span className="text-xs text-gray-500"&gt;{tier.desc}&lt;/span&gt;
+                    &lt;/div&gt;
+                    &lt;span className="font-bold text-primary"&gt;${tier.price}&lt;/span&gt;
+                  &lt;/button&gt;
+                ))}
+              &lt;/div&gt;
+            &lt;/motion.div&gt;
+          )}
+
+          {/* Step 2: Flavor */}
+          {step === 2 &amp;&amp; (
+             &lt;motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}&gt;
+              &lt;h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6 font-display"&gt;Choose Flavor Profile&lt;/h3&gt;
+              &lt;div className="grid grid-cols-2 gap-3"&gt;
+                {flavorOptions.map((flavor) =&gt; (
+                  &lt;button
+                    key={flavor.name}
+                    onClick={() =&gt; setConfig({...config, flavor: flavor.name})}
+                    className={`p-4 rounded-xl border-2 text-left transition-all ${
+                       config.flavor === flavor.name 
+                       ? 'border-primary bg-primary/5' 
+                       : 'border-gray-200 dark:border-gray-700 hover:border-primary/50'
+                    }`}
+                  &gt;
+                    &lt;div className="w-8 h-8 rounded-full mb-3 border border-black/10 shadow-sm" style={{ backgroundColor: flavor.color === 'none' ? '#fdf5e6' : flavor.color }}&gt;&lt;/div&gt;
+                    &lt;span className="block font-bold text-sm text-gray-900 dark:text-white"&gt;{flavor.name}&lt;/span&gt;
+                    &lt;span className="text-xs text-gray-500"&gt;{flavor.desc}&lt;/span&gt;
+                  &lt;/button&gt;
+                ))}
+              &lt;/div&gt;
+            &lt;/motion.div&gt;
+          )}
+
+          {/* Step 3: Frosting */}
+          {step === 3 &amp;&amp; (
+            &lt;motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}&gt;
+              &lt;h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6 font-display"&gt;Frosting Style&lt;/h3&gt;
+              &lt;div className="space-y-3"&gt;
+                {frostingOptions.map((opt) =&gt; (
+                  &lt;button
+                    key={opt.name}
+                    onClick={() =&gt; setConfig({...config, frosting: opt.name})}
+                    className={`w-full p-4 rounded-xl border-2 flex items-center gap-4 transition-all ${
+                      config.frosting === opt.name 
+                        ? 'border-primary bg-primary/5 dark:bg-primary/10' 
+                        : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-primary/50'
+                    }`}
+                  &gt;
+                    &lt;div className={`w-10 h-10 rounded-full flex items-center justify-center ${config.frosting === opt.name ? 'bg-white dark:bg-gray-800 shadow-sm' : 'bg-gray-100 dark:bg-gray-700'}`}&gt;
+                      &lt;span className={`material-icons ${config.frosting === opt.name ? 'text-primary' : 'text-gray-400'}`}&gt;{opt.icon}&lt;/span&gt;
+                    &lt;/div&gt;
+                    &lt;div className="text-left"&gt;
+                      &lt;span className="block font-bold text-sm text-gray-900 dark:text-white"&gt;{opt.name}&lt;/span&gt;
+                      &lt;span className="block text-xs text-gray-500"&gt;{opt.desc}&lt;/span&gt;
+                    &lt;/div&gt;
+                  &lt;/button&gt;
+                ))}
+              &lt;/div&gt;
+            &lt;/motion.div&gt;
+          )}
+
+          {/* Step 4: Toppings */}
+          {step === 4 &amp;&amp; (
+            &lt;motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}&gt;
+              &lt;h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6 font-display"&gt;Add Final Touches&lt;/h3&gt;
+              &lt;div className="grid grid-cols-2 gap-3"&gt;
+                {toppingOptions.map((top) =&gt; (
+                  &lt;button
+                    key={top.name}
+                    onClick={() =&gt; handleToppingToggle(top.name)}
+                    className={`p-4 rounded-xl border-2 text-center transition-all relative ${
+                      config.toppings.includes(top.name)
+                        ? 'border-primary bg-primary/5' 
+                        : 'border-gray-200 dark:border-gray-700 hover:border-primary/50'
+                    }`}
+                  &gt;
+                    &lt;div className="text-3xl mb-2"&gt;{top.icon}&lt;/div&gt;
+                    &lt;span className="block font-bold text-sm text-gray-900 dark:text-white"&gt;{top.name}&lt;/span&gt;
+                    &lt;span className="text-xs text-primary font-bold"&gt;+${top.price}&lt;/span&gt;
+                    {config.toppings.includes(top.name) &amp;&amp; (
+                      &lt;div className="absolute top-2 right-2 w-5 h-5 bg-primary rounded-full text-white flex items-center justify-center"&gt;
+                        &lt;span className="material-icons text-[14px]"&gt;check&lt;/span&gt;
+                      &lt;/div&gt;
+                    )}
+                  &lt;/button&gt;
+                ))}
+              &lt;/div&gt;
+            &lt;/motion.div&gt;
+          )}
+
+          {/* Summary of Selection (Visible when not editing that step) */}
+           &lt;div className="mt-8 pt-8 border-t border-gray-100 dark:border-white/5 space-y-4"&gt;
+             {step &gt; 1 &amp;&amp; &lt;CompletedStep number={1} title="Size" value={tierOptions.find(t =&gt; t.value === config.tier)?.label || ''} onEdit={() =&gt; jumpToStep(1)} /&gt;}
+             {step &gt; 2 &amp;&amp; &lt;CompletedStep number={2} title="Flavor" value={config.flavor} onEdit={() =&gt; jumpToStep(2)} /&gt;}
+             {step &gt; 3 &amp;&amp; &lt;CompletedStep number={3} title="Frosting" value={config.frosting} onEdit={() =&gt; jumpToStep(3)} /&gt;}
+           &lt;/div&gt;
+
+        &lt;/div&gt;
+
+        {/* Footer */}
+        &lt;div className="p-6 bg-white dark:bg-coffee-dark border-t border-gray-200 dark:border-white/10 shadow-lg"&gt;
+          &lt;div className="flex justify-between items-end mb-6"&gt;
+            &lt;div&gt;
+              &lt;p className="text-xs text-gray-500 uppercase font-semibold"&gt;Estimated Total&lt;/p&gt;
+              &lt;p className="text-3xl font-bold text-gray-900 dark:text-white font-display"&gt;${calculateTotal().toFixed(2)}&lt;/p&gt;
+            &lt;/div&gt;
+            &lt;div className="text-right"&gt;
+              &lt;p className="text-xs text-green-600 flex items-center justify-end gap-1"&gt;
+                &lt;span className="material-icons text-[14px]"&gt;local_shipping&lt;/span&gt; Free delivery
+              &lt;/p&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+          &lt;div className="grid grid-cols-4 gap-3"&gt;
+             {step &gt; 1 ? (
+               &lt;button onClick={prevStep} className="border border-gray-200 dark:border-gray-600 rounded-lg flex items-center justify-center text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"&gt;
+                 &lt;span className="material-icons"&gt;arrow_back&lt;/span&gt;
+               &lt;/button&gt;
+             ) : (
+                &lt;button className="border border-gray-200 dark:border-gray-600 rounded-lg flex items-center justify-center text-gray-300 cursor-not-allowed"&gt;
+                  &lt;span className="material-icons"&gt;arrow_back&lt;/span&gt;
+                &lt;/button&gt;
+             )}
+            
+            {step &lt; 4 ? (
+              &lt;button onClick={nextStep} className="col-span-3 bg-stone-800 hover:bg-stone-900 dark:bg-white dark:text-stone-900 font-bold py-4 rounded-lg shadow-lg flex items-center justify-center gap-2 transform active:scale-95 transition-all text-white"&gt;
+                Next Step
+              &lt;/button&gt;
+            ) : (
+              &lt;button className="col-span-3 bg-primary hover:bg-primary/90 text-white font-bold py-4 rounded-lg shadow-lg flex items-center justify-center gap-2 transform active:scale-95 transition-all"&gt;
+                &lt;span&gt;Order via WhatsApp&lt;/span&gt;
+                &lt;span className="material-icons"&gt;send&lt;/span&gt;
+              &lt;/button&gt;
+            )}
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/aside&gt;
+    &lt;/div&gt;
+  );
+};
+
+const IconButton: React.FC&lt;{ icon: string }&gt; = ({ icon }) =&gt; (
+  &lt;button className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-md p-3 rounded-lg hover:bg-white transition-colors shadow-sm"&gt;
+    &lt;span className="material-icons-outlined text-gray-600 dark:text-gray-300"&gt;{icon}&lt;/span&gt;
+  &lt;/button&gt;
+);
+
+const CompletedStep: React.FC&lt;{ number: number; title: string; value: string; onEdit: () =&gt; void }&gt; = ({ title, value, onEdit }) =&gt; (
+  &lt;div className="opacity-60 hover:opacity-100 transition-opacity"&gt;
+    &lt;div className="flex justify-between items-center mb-1"&gt;
+      &lt;h3 className="text-xs font-bold flex items-center gap-2 text-gray-800 dark:text-gray-200 uppercase tracking-wider"&gt;
+        &lt;span className="w-4 h-4 rounded-full bg-green-500 text-white flex items-center justify-center text-[10px]"&gt;&lt;span className="material-icons text-[10px]"&gt;check&lt;/span&gt;&lt;/span&gt;
+        {title}
+      &lt;/h3&gt;
+      &lt;button onClick={onEdit} className="text-xs text-primary underline hover:text-orange-600"&gt;Edit&lt;/button&gt;
+    &lt;/div&gt;
+    &lt;div className="pl-6"&gt;
+       &lt;p className="text-sm font-semibold text-gray-900 dark:text-white"&gt;{value}&lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+);
+
+export default Architect;
+</pre>
+</body>
+</html>
