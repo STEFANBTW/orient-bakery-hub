@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Orient Games | Arena HUD</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600;700&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#9333EA',
+                        neon: '#A855F7',
+                        background: '#050505',
+                    },
+                    fontFamily: {
+                        display: ['Orbitron', 'sans-serif'],
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        @keyframes scanline {
+            0% {
+                transform: translateY(-100%);
+            }
+
+            100% {
+                transform: translateY(100%);
+            }
+        }
+
+        .scanline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent, rgba(147, 51, 234, 0.05), transparent);
+            animation: scanline 8s linear infinite;
+            pointer-events: none;
+            z-index: 99;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .neon-glow {
+            box-shadow: 0 0 20px rgba(147, 51, 234, 0.3);
+        }
+    </style>
+</head>
+
+<body class="bg-background text-slate-100 font-sans selection:bg-primary selection:text-white">
+    <div class="scanline"></div>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        // --- COMPONENTS ---
+
+        const Nav = ({ page, setPage }) => (
+            <nav className="fixed top-0 left-0 w-full z-50 p-6 flex justify-between items-center bg-gradient-to-b from-black/80 to-transparent">
+                <div className="flex items-center gap-3 cursor-pointer" onClick={() => setPage('HOME')}>
+                    <div className="w-10 h-10 bg-primary/20 border border-primary/40 rounded-xl flex items-center justify-center text-primary shadow-[0_0_15px_rgba(147,51,234,0.4)]">
+                        <span className="material-icons">sports_esports</span>
+                    </div>
+                    <span className="font-display text-xl font-bold tracking-widest text-white">ARENA_</span>
+                </div>
+                <div className="hidden md:flex items-center gap-8 glass px-8 py-3 rounded-full">
+                    {['HOME', 'ARENA', 'HARDWARE', 'PROFILE'].map(item => (
+                        <button
+                            key={item}
+                            onClick={() => setPage(item)}
+                            className={`text-[10px] font-bold uppercase tracking-[0.3em] transition-all ${page === item ? 'text-primary' : 'text-slate-500 hover:text-white'}`}
+                        >
+                            {item}
+                        </button>
+                    ))}
+                </div>
+                <div className="flex items-center gap-4">
+                    <a href="index.html" className="w-10 h-10 glass rounded-full flex items-center justify-center hover:bg-primary/20 transition-all border border-white/10">
+                        <span className="material-icons text-white text-sm">home</span>
+                    </a>
+                </div>
+            </nav>
+        );
+
+        const Home = ({ setPage }) => (
+            <div className="min-h-screen flex flex-col items-center justify-center px-8 relative overflow-hidden">
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/10 rounded-full blur-[120px] pointer-events-none"></div>
+                <div className="relative z-10 text-center max-w-4xl">
+                    <span className="text-[10px] font-bold uppercase tracking-[0.5em] text-primary mb-6 block">Universal Gaming Protocol v2.4</span>
+                    <h1 className="font-display text-7xl md:text-9xl font-bold text-white mb-8 tracking-tighter leading-none">
+                        BEYOND <br /><span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-neon">REALITY.</span>
+                    </h1>
+                    <p className="text-slate-400 text-lg md:text-xl font-light max-w-2xl mx-auto mb-12 leading-relaxed tracking-wide">
+                        The ultimate high-fidelity arena. Low latency, high stakes, and unlimited bandwidth. Step into the frontier.
+                    </p>
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+                        <button onClick={() => setPage('ARENA')} className="px-10 py-5 bg-primary text-white font-bold uppercase tracking-widest text-xs rounded-2xl hover:scale-105 active:scale-95 transition-all neon-glow">Initialize HUD</button>
+                        <button onClick={() => setPage('HARDWARE')} className="px-10 py-5 glass border border-white/10 text-white font-bold uppercase tracking-widest text-xs rounded-2xl hover:bg-white/5 transition-all">Specs Lab</button>
+                    </div>
+                </div>
+            </div>
+        );
+
+        const ArenaHud = () => {
+            const [latency, setLatency] = useState(12);
+            useEffect(() => {
+                const interval = setInterval(() => setLatency(prev => Math.max(8, Math.min(24, prev + (Math.random() * 4 - 2)))), 2000);
+                return () => clearInterval(interval);
+            }, []);
+
+            return (
+                <div className="pt-32 px-8 min-h-screen">
+                    <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-4 gap-6">
+                        <div className="lg:col-span-3 space-y-6">
+                            <div className="glass rounded-[2rem] p-8 relative overflow-hidden h-[600px]">
+                                <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=1200&q=80" className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-overlay" />
+                                <div className="absolute top-8 left-8 flex items-center gap-4">
+                                    <div className="px-4 py-2 bg-red-600/20 border border-red-600/50 rounded-lg text-[10px] font-bold text-red-500 uppercase tracking-widest animate-pulse">Live Arena Feed</div>
+                                    <div className="px-4 py-2 glass rounded-lg text-[10px] font-bold text-slate-400 uppercase tracking-widest">Sector 7G - Jos Highground</div>
+                                </div>
+                                <div className="absolute bottom-8 left-8 right-8 flex justify-between items-end">
+                                    <div>
+                                        <h2 className="font-display text-4xl font-bold mb-2">NEON TOURNAMENT</h2>
+                                        <p className="text-slate-400 text-xs tracking-widest uppercase">Currently Active &bull; Rounds 4/12</p>
+                                    </div>
+                                    <button className="px-8 py-4 bg-primary text-white rounded-xl text-xs font-bold uppercase tracking-widest">Join Instance</button>
+                                </div>
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div className="glass p-8 rounded-3xl border-l-[6px] border-primary">
+                                    <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-4">Network Latency</p>
+                                    <h3 className="text-4xl font-display font-bold text-white">{latency.toFixed(0)}<span className="text-lg text-primary">MS</span></h3>
+                                </div>
+                                <div className="glass p-8 rounded-3xl border-l-[6px] border-neon font-bold uppercase tracking-widest">
+                                    <p className="text-[10px] text-slate-500 mb-4">Packet Loss</p>
+                                    <h3 className="text-4xl font-display text-white">0.02<span className="text-lg text-neon">%</span></h3>
+                                </div>
+                                <div className="glass p-8 rounded-3xl border-l-[6px] border-blue-500 font-bold uppercase tracking-widest">
+                                    <p className="text-[10px] text-slate-500 mb-4">Encryption</p>
+                                    <h3 className="text-4xl font-display text-white">SHA<span className="text-lg text-blue-500">256</span></h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="space-y-6">
+                            <div className="glass rounded-[2rem] p-8 overflow-hidden h-full">
+                                <h3 className="font-display text-xl font-bold mb-8 tracking-wider">ACTIVE RIDERS</h3>
+                                <div className="space-y-6">
+                                    {[
+                                        { name: 'X_Panda_X', score: 4500, status: 'Online' },
+                                        { name: 'ShadowCaster', score: 3200, status: 'Ingame' },
+                                        { name: 'Jos_Titan', score: 2800, status: 'Online' },
+                                        { name: 'Vortex_Null', score: 1200, status: 'Busy' }
+                                    ].map((user, i) => (
+                                        <div key={i} className="flex items-center justify-between group cursor-pointer p-2 rounded-xl hover:bg-white/5 transition-all">
+                                            <div className="flex items-center gap-4">
+                                                <div className="w-10 h-10 rounded-full bg-primary/20 border border-primary/40 flex items-center justify-center text-xs text-primary font-bold">{user.name[0]}</div>
+                                                <div>
+                                                    <p className="text-xs font-bold uppercase tracking-widest text-slate-200">{user.name}</p>
+                                                    <p className="text-[10px] text-slate-500">{user.status}</p>
+                                                </div>
+                                            </div>
+                                            <div className="text-right">
+                                                <p className="text-xs font-bold text-primary">{user.score}</p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                                <button className="w-full mt-10 py-4 glass border border-white/10 rounded-xl text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-white/5 transition-all">View All Leaderboard</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const Hardware = () => (
+            <div className="pt-40 px-8 pb-32 animate-fade-in max-w-7xl mx-auto">
+                <div className="mb-20 text-center">
+                    <h2 className="font-display text-6xl font-bold mb-6">THE SPEC LAB</h2>
+                    <div className="w-24 h-1 bg-primary mx-auto"></div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {[
+                        { title: 'RTX 5090 SE', cat: 'GPU', desc: 'Overclocked neural cores for 8k native performance.' },
+                        { title: 'Quantum DDR6', cat: 'Memory', desc: '128GB hyper-frequency ram with 2ns latency.' },
+                        { title: 'Fiber 10G', cat: 'Sync', desc: 'Direct satellite mesh link for zero-jitter connection.' }
+                    ].map((h, i) => (
+                        <div key={i} className="glass p-10 rounded-[3rem] hover:border-primary/50 transition-all group">
+                            <span className="text-[10px] font-bold text-primary uppercase tracking-[0.4em] mb-4 block">{h.cat}</span>
+                            <h3 className="font-display text-2xl font-bold mb-6 group-hover:text-primary transition-all">{h.title}</h3>
+                            <p className="text-slate-400 leading-relaxed font-light">{h.desc}</p>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        );
+
+        const Profile = () => (
+            <div className="pt-48 pb-32 px-8 animate-fade-in max-w-4xl mx-auto text-center">
+                <div className="w-32 h-32 rounded-full border-4 border-primary/40 mx-auto mb-8 relative">
+                    <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&q=80" className="w-full h-full object-cover rounded-full" />
+                    <div className="absolute -bottom-2 -right-2 w-10 h-10 bg-primary/20 glass border border-primary/50 rounded-full flex items-center justify-center text-primary">
+                        <span className="material-icons text-sm">verified</span>
+                    </div>
+                </div>
+                <h2 className="font-display text-4xl font-bold mb-4">STEFAN BTW_</h2>
+                <p className="text-primary font-bold uppercase tracking-[0.3em] text-xs mb-12">Elite Operative &bull; Level 99</p>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                    <div className="glass p-6 rounded-2xl">
+                        <p className="text-[10px] uppercase text-slate-500 mb-2">Wins</p>
+                        <p className="text-2xl font-display font-bold">128</p>
+                    </div>
+                    <div className="glass p-6 rounded-2xl">
+                        <p className="text-[10px] uppercase text-slate-500 mb-2">Rank</p>
+                        <p className="text-2xl font-display font-bold">G1</p>
+                    </div>
+                    <div className="glass p-6 rounded-2xl">
+                        <p className="text-[10px] uppercase text-slate-500 mb-2">XP</p>
+                        <p className="text-2xl font-display font-bold">1.2M</p>
+                    </div>
+                    <div className="glass p-6 rounded-2xl">
+                        <p className="text-[10px] uppercase text-slate-500 mb-2">K/D</p>
+                        <p className="text-2xl font-display font-bold">3.4</p>
+                    </div>
+                </div>
+            </div>
+        );
+
+        const App = () => {
+            const [page, setPage] = useState('HOME');
+            useEffect(() => { window.scrollTo(0, 0); }, [page]);
+
+            return (
+                <div className="min-h-screen">
+                    <Nav page={page} setPage={setPage} />
+                    <main>
+                        {page === 'HOME' && <Home setPage={setPage} />}
+                        {page === 'ARENA' && <ArenaHud />}
+                        {page === 'HARDWARE' && <Hardware />}
+                        {page === 'PROFILE' && <Profile />}
+                    </main>
+                    <footer className="py-20 text-slate-600 text-[10px] font-bold uppercase tracking-[0.5em] text-center border-t border-white/5">
+                        &copy; 2026 Arena Framework &bull; Global Operations
+                    </footer>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+
+</html>

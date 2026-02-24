@@ -4,94 +4,239 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Orient Warehouse | Hub</title>
+  <title>Orient Hub | Digital Warehouse</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,400&display=swap"
+    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Space Grotesk', 'sans-serif'],
+            serif: ['Playfair Display', 'serif'],
+          },
+          colors: {
+            premium: '#fcfcfc',
+          }
+        }
+      }
+    }
+  </script>
   <style>
     body {
-      background: #000;
-      color: #00ff00;
-      font-family: 'Courier New', Courier, monospace;
+      background-color: #fbfbfc;
+      color: #1a1a1a;
     }
 
-    .cli-btn {
-      border: 1px solid #00ff00;
-      padding: 0.5rem 1rem;
-      transition: all 0.2s;
+    .project-card {
+      background: white;
+      border-radius: 2.5rem;
+      padding: 3rem;
+      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      border: 1px solid rgba(0, 0, 0, 0.03);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
 
-    .cli-btn:hover {
-      background: #00ff00;
-      color: #000;
+    .project-card:hover {
+      transform: translateY(-12px);
+      box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.08);
+      border-color: #1a1a1a;
     }
 
-    .scanline {
-      width: 100%;
-      height: 2px;
-      background: rgba(0, 255, 0, 0.1);
-      position: fixed;
-      top: 0;
-      left: 0;
-      pointer-events: none;
-      animation: scan 4s linear infinite;
+    .bg-grid {
+      background-image: radial-gradient(#e5e7eb 0.5px, transparent 0.5px);
+      background-size: 32px 32px;
     }
 
-    @keyframes scan {
-      0% {
-        top: 0;
+    .reveal {
+      animation: reveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      opacity: 0;
+    }
+
+    @keyframes reveal {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
       }
 
-      100% {
-        top: 100%;
+      to {
+        opacity: 1;
+        transform: translateY(0);
       }
     }
   </style>
 </head>
 
-<body class="p-10">
-  <div class="scanline"></div>
-  <div class="max-w-4xl mx-auto border border-[#00ff00] p-8 shadow-[0_0_20px_rgba(0,255,0,0.2)]">
-    <header class="mb-10">
-      <h1 class="text-3xl font-bold mb-2 uppercase tracking-tighter">> ORIENT_WAREHOUSE_v1.0.4</h1>
-      <p class="opacity-70 text-sm">Awaiting instruction... [6 PROJECTS_TERMINATED]</p>
+<body class="font-sans bg-grid min-h-screen">
+
+  <nav class="max-w-[1600px] mx-auto px-10 py-12 flex justify-between items-center reveal">
+    <div class="flex items-center gap-4">
+      <div class="w-12 h-12 bg-black text-white rounded-2xl flex items-center justify-center shadow-2xl">
+        <span class="material-icons">inventory_2</span>
+      </div>
+      <div>
+        <h1 class="text-2xl font-bold uppercase tracking-tight">Orient Hub</h1>
+        <p class="text-[10px] text-slate-400 font-bold tracking-[0.3em] uppercase">Warehouse v2.0 &bull; Deployment
+          Ready</p>
+      </div>
+    </div>
+    <div class="flex items-center gap-8">
+      <span class="text-xs font-bold text-slate-400 uppercase tracking-widest hidden md:block">STEFAN BTW_ SYSTEM</span>
+      <div
+        class="w-10 h-10 border border-slate-200 rounded-full flex items-center justify-center hover:bg-black hover:text-white transition-all cursor-pointer">
+        <span class="material-icons text-sm">settings</span>
+      </div>
+    </div>
+  </nav>
+
+  <main class="max-w-[1600px] mx-auto px-10 pb-32">
+    <header class="max-w-4xl mb-32 pt-20 reveal" style="animation-delay: 0.1s">
+      <h2 class="font-serif text-6xl md:text-[7rem] leading-[1.1] mb-10 tracking-tight">
+        Reconstructed <br />
+        <span class="text-slate-300 italic font-light">Experiences.</span>
+      </h2>
+      <p class="text-xl md:text-2xl text-slate-500 font-light max-w-2xl leading-relaxed">
+        A unified architecture for high-fidelity commerce and entertainment.
+        Optimized for performance, built with React, delivered in standalone HTML.
+      </p>
     </header>
 
-    <main class="grid gap-6">
-      <section class="border-b border-[#00ff00]/30 pb-6">
-        <h2 class="text-xl mb-2">$ ls -la /projects</h2>
-        <div class="space-y-4 mt-4">
-          <div class="flex items-center justify-between group">
-            <span>[01] ORIENT_BAKERY_HUB</span>
-            <a href="bakery.html" class="cli-btn text-xs">LAUNCH_VIEWER</a>
-          </div>
-          <div class="flex items-center justify-between group">
-            <span>[02] ORIENT_LUXURY_DINING</span>
-            <a href="orient-luxury-dining/index.html" class="cli-btn text-xs">SRC_EXPLORE</a>
-          </div>
-          <div class="flex items-center justify-between group">
-            <span>[03] ORIENT_GAMES_EXPERIENCE</span>
-            <a href="orient-games-experience/index.html" class="cli-btn text-xs">SRC_EXPLORE</a>
-          </div>
-          <div class="flex items-center justify-between group">
-            <span>[04] ORIENT_LOUNGE_SOUND</span>
-            <a href="orient-lounge/index.html" class="cli-btn text-xs">SRC_EXPLORE</a>
-          </div>
-          <div class="flex items-center justify-between group">
-            <span>[05] ORIENT_SUPERMARKET_SUITE</span>
-            <a href="orient-supermarket-suite/index.html" class="cli-btn text-xs">SRC_EXPLORE</a>
-          </div>
-          <div class="flex items-center justify-between group">
-            <span>[06] ORIENT_WATER_WOODS</span>
-            <a href="orient-water/index.html" class="cli-btn text-xs">SRC_EXPLORE</a>
-          </div>
-        </div>
-      </section>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 reveal" style="animation-delay: 0.2s">
 
-      <section class="opacity-50 text-xs mt-10">
-        <p>> SYSTEM: All React components are locally hosted in respective subdirectories.</p>
-        <p>> STATUS: Ready for development.</p>
-      </section>
-    </main>
-  </div>
+      <!-- Project: Bakery -->
+      <div class="project-card">
+        <div>
+          <div class="w-16 h-16 bg-orange-50 text-orange-600 rounded-[1.25rem] flex items-center justify-center mb-10">
+            <span class="material-icons text-3xl">bakery_dining</span>
+          </div>
+          <h3 class="text-3xl font-bold mb-4 tracking-tighter">Artisan Bakery</h3>
+          <p class="text-slate-500 leading-relaxed mb-12">
+            Comprehensive bakery management featuring a cake architect, wholesale logistics, and sensory brand journey.
+          </p>
+        </div>
+        <div class="flex justify-between items-center pt-10 border-t border-slate-50">
+          <span class="text-[10px] font-bold uppercase tracking-widest text-slate-300">Operational SPA</span>
+          <a href="bakery.html" class="flex items-center gap-2 font-bold text-orange-600 group">
+            Launch <span
+              class="material-icons text-sm transition-transform group-hover:translate-x-1">arrow_forward</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Project: Supermarket -->
+      <div class="project-card">
+        <div>
+          <div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-[1.25rem] flex items-center justify-center mb-10">
+            <span class="material-icons text-3xl">storefront</span>
+          </div>
+          <h3 class="text-3xl font-bold mb-4 tracking-tighter">Supermarket Suite</h3>
+          <p class="text-slate-500 leading-relaxed mb-12">
+            A multi-modular commerce infrastructure with smart cart logic, wholesale portals, and customer analytics.
+          </p>
+        </div>
+        <div class="flex justify-between items-center pt-10 border-t border-slate-50">
+          <span class="text-[10px] font-bold uppercase tracking-widest text-slate-300">Enterprise Suite</span>
+          <a href="supermarket.html" class="flex items-center gap-2 font-bold text-blue-600 group">
+            Launch <span
+              class="material-icons text-sm transition-transform group-hover:translate-x-1">arrow_forward</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Project: Lounge -->
+      <div class="project-card">
+        <div>
+          <div class="w-16 h-16 bg-amber-50 text-amber-600 rounded-[1.25rem] flex items-center justify-center mb-10">
+            <span class="material-icons text-3xl">liquor</span>
+          </div>
+          <h3 class="text-3xl font-bold mb-4 tracking-tighter">Luxury Lounge</h3>
+          <p class="text-slate-500 leading-relaxed mb-12">
+            An atmospheric sensory visualizer with integrated concierge services and frequency-tuned audio profiles.
+          </p>
+        </div>
+        <div class="flex justify-between items-center pt-10 border-t border-slate-50">
+          <span class="text-[10px] font-bold uppercase tracking-widest text-slate-300">Atmospheric</span>
+          <a href="lounge.html" class="flex items-center gap-2 font-bold text-amber-600 group">
+            Launch <span
+              class="material-icons text-sm transition-transform group-hover:translate-x-1">arrow_forward</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Project: Games -->
+      <div class="project-card">
+        <div>
+          <div class="w-16 h-16 bg-purple-50 text-purple-600 rounded-[1.25rem] flex items-center justify-center mb-10">
+            <span class="material-icons text-3xl">sports_esports</span>
+          </div>
+          <h3 class="text-3xl font-bold mb-4 tracking-tighter">Arena HUD</h3>
+          <p class="text-slate-500 leading-relaxed mb-12">
+            High-fidelity gaming dashboard with live latency telemetry, sector feeds, and neural equipment specs.
+          </p>
+        </div>
+        <div class="flex justify-between items-center pt-10 border-t border-slate-50">
+          <span class="text-[10px] font-bold uppercase tracking-widest text-slate-300">Interactive HUD</span>
+          <a href="games.html" class="flex items-center gap-2 font-bold text-purple-600 group">
+            Launch <span
+              class="material-icons text-sm transition-transform group-hover:translate-x-1">arrow_forward</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Project: Dining -->
+      <div class="project-card">
+        <div>
+          <div
+            class="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-[1.25rem] flex items-center justify-center mb-10">
+            <span class="material-icons text-3xl">restaurant</span>
+          </div>
+          <h3 class="text-3xl font-bold mb-4 tracking-tighter">Luxury Dining</h3>
+          <p class="text-slate-500 leading-relaxed mb-12">
+            Editorial dining interface featuring an AI sommelier, precision pairings, and local heritage menus.
+          </p>
+        </div>
+        <div class="flex justify-between items-center pt-10 border-t border-slate-50">
+          <span class="text-[10px] font-bold uppercase tracking-widest text-slate-300">Editorial UI</span>
+          <a href="dining.html" class="flex items-center gap-2 font-bold text-emerald-600 group">
+            Launch <span
+              class="material-icons text-sm transition-transform group-hover:translate-x-1">arrow_forward</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Project: Water -->
+      <div class="project-card">
+        <div>
+          <div class="w-16 h-16 bg-cyan-50 text-cyan-600 rounded-[1.25rem] flex items-center justify-center mb-10">
+            <span class="material-icons text-3xl">water_drop</span>
+          </div>
+          <h3 class="text-3xl font-bold mb-4 tracking-tighter">Hydration Ops</h3>
+          <p class="text-slate-500 leading-relaxed mb-12">
+            Corporate logistics interface for water purification auditing, batch tracking, and distribution maps.
+          </p>
+        </div>
+        <div class="flex justify-between items-center pt-10 border-t border-slate-50">
+          <span class="text-[10px] font-bold uppercase tracking-widest text-slate-300">Operational Log</span>
+          <a href="water.html" class="flex items-center gap-2 font-bold text-cyan-600 group">
+            Launch <span
+              class="material-icons text-sm transition-transform group-hover:translate-x-1">arrow_forward</span>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="text-center py-20 border-t border-slate-100 reveal" style="animation-delay: 0.3s">
+    <p class="text-[10px] font-bold uppercase tracking-[0.5em] text-slate-300">&copy; 2024 Orient Development Group
+      &bull; Built for Performance</p>
+  </footer>
+
 </body>
 
 </html>

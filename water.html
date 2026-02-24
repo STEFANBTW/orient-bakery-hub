@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Orient Water | Premium Hydration</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            DEFAULT: '#A6F3FC',
+                            dark: '#7ED6E0',
+                        },
+                        secondary: {
+                            DEFAULT: '#0F172A',
+                            light: '#1E293B',
+                        },
+                        background: {
+                            light: '#F8FAFC',
+                            dark: '#020617',
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-out forwards',
+                        'slide-up': 'slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+                        slideUp: { '0%': { opacity: '0', transform: 'translateY(40px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+                        float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-20px)' } },
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        @keyframes waveMove {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        .animate-wave-slow {
+            animation: waveMove 25s linear infinite;
+        }
+
+        .animate-wave-medium {
+            animation: waveMove 18s linear infinite;
+        }
+
+        .animate-wave-fast {
+            animation: waveMove 12s linear infinite;
+        }
+
+        @keyframes floatBubble {
+            0% {
+                transform: translateY(100vh) scale(0);
+                opacity: 0;
+            }
+
+            30% {
+                opacity: 0.6;
+            }
+
+            100% {
+                transform: translateY(-20vh) scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        .bubble {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+            animation: floatBubble 10s linear infinite;
+            bottom: -20px;
+        }
+
+        .dark .bubble {
+            background: rgba(166, 243, 252, 0.15);
+        }
+
+        @keyframes rayRotate {
+            0% {
+                transform: rotate(0deg) scale(1);
+            }
+
+            50% {
+                transform: rotate(180deg) scale(1.1);
+            }
+
+            100% {
+                transform: rotate(360deg) scale(1);
+            }
+        }
+
+        .light-ray {
+            animation: rayRotate 120s linear infinite;
+        }
+    </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark transition-colors duration-500 overflow-x-hidden">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        // --- COMPONENTS ---
+
+        const Navbar = ({ currentPage, setPage }) => {
+            const [isScrolled, setIsScrolled] = useState(false);
+            const [isDark, setIsDark] = useState(() => localStorage.getItem('theme') === 'dark');
+
+            useEffect(() => {
+                const handleScroll = () => setIsScrolled(window.scrollY > 20);
+                window.addEventListener('scroll', handleScroll);
+                return () => window.removeEventListener('scroll', handleScroll);
+            }, []);
+
+            useEffect(() => {
+                if (isDark) {
+                    document.documentElement.classList.add('dark');
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                    localStorage.setItem('theme', 'light');
+                }
+            }, [isDark]);
+
+            return (
+                <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${isScrolled ? 'bg-white/80 dark:bg-slate-900/80 backdrop-blur-md py-4 shadow-lg' : 'bg-transparent py-6'}`}>
+                    <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
+                        <div className="flex items-center gap-2 cursor-pointer" onClick={() => setPage('home')}>
+                            <span className="material-icons text-blue-500 dark:text-primary text-3xl">water_drop</span>
+                            <span className="font-bold text-xl tracking-tighter text-slate-900 dark:text-white uppercase italic">Orient</span>
+                        </div>
+
+                        <div className="hidden md:flex items-center gap-8">
+                            {[
+                                { id: 'home', name: 'Identity' },
+                                { id: 'process', name: 'The Process' },
+                                { id: 'impact', name: 'Social Impact' },
+                                { id: 'logistics', name: 'Logistics' }
+                            ].map(item => (
+                                <button
+                                    key={item.id}
+                                    onClick={() => setPage(item.id)}
+                                    className={`text-sm font-bold uppercase tracking-widest transition-all ${currentPage === item.id ? 'text-blue-600 dark:text-primary' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
+                                >
+                                    {item.name}
+                                </button>
+                            ))}
+                        </div>
+
+                        <div className="flex items-center gap-4">
+                            <button onClick={() => setIsDark(!isDark)} className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300">
+                                <span className="material-icons text-xl">{isDark ? 'light_mode' : 'dark_mode'}</span>
+                            </button>
+                            <a href="index.html" className="bg-slate-900 dark:bg-primary text-white dark:text-secondary px-6 py-2 rounded-full text-xs font-bold uppercase tracking-widest hover:scale-105 active:scale-95 transition-all">
+                                Hub
+                            </a>
+                        </div>
+                    </div>
+                </nav>
+            );
+        };
+
+        const Footer = () => (
+            <footer className="bg-slate-900 text-white py-12 border-t border-slate-800">
+                <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-10">
+                    <div>
+                        <div className="flex items-center space-x-2 mb-6">
+                            <span className="material-icons text-primary text-2xl">water_drop</span>
+                            <span className="font-bold text-lg tracking-wider uppercase">Orient Water</span>
+                        </div>
+                        <p className="text-slate-400 text-sm leading-relaxed">
+                            Pioneering water purification technology since 1998. Committed to sustainable hydration.
+                        </p>
+                    </div>
+                    <div>
+                        <h4 className="font-bold text-white mb-6 uppercase text-sm tracking-wider">Certifications</h4>
+                        <div className="flex gap-4 opacity-70">
+                            {['ISO', 'NSF', 'FDA'].map(cert => (
+                                <div key={cert} className="w-12 h-12 bg-white rounded flex items-center justify-center text-slate-900 font-bold text-xs">{cert}</div>
+                            ))}
+                        </div>
+                    </div>
+                    <div>
+                        <h4 className="font-bold text-white mb-6 uppercase text-sm tracking-wider">Quick Links</h4>
+                        <ul className="space-y-3 text-sm text-slate-400">
+                            {['Commercial Solutions', 'Home Delivery', 'Water Quality Report', 'Sustainability'].map(item => (
+                                <li key={item}><a href="#" className="hover:text-primary transition-colors">{item}</a></li>
+                            ))}
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 className="font-bold text-white mb-6 uppercase text-sm tracking-wider">Newsletter</h4>
+                        <div className="flex">
+                            <input type="email" placeholder="Your email" className="bg-white/10 border-none text-white text-sm px-4 py-2 rounded-l w-full focus:ring-1 focus:ring-primary placeholder-slate-500" />
+                            <button className="bg-primary text-secondary px-4 py-2 rounded-r font-medium hover:bg-primary-dark transition-colors text-sm">Join</button>
+                        </div>
+                    </div>
+                </div>
+                <div className="max-w-7xl mx-auto px-6 mt-12 pt-8 border-t border-slate-800 text-center text-slate-500 text-xs">
+                    © 2026 Orient Water Factory. All rights reserved.
+                </div>
+            </footer>
+        );
+
+        // --- PAGES ---
+
+        const Home = ({ setPage }) => {
+            const steps = [
+                { id: '01', title: 'Sediment', desc: 'Removes large particles.', icon: 'filter_alt' },
+                { id: '02', title: 'Carbon', desc: 'Absorbs chlorine & odors.', icon: 'grain' },
+                { id: '03', title: 'RO', desc: 'Reverse Osmosis Core.', icon: 'blur_on' },
+                { id: '04', title: 'UV Ray', desc: 'Biological sterilization.', icon: 'light_mode' },
+                { id: '05', title: 'Mineral', desc: 'Re-mineralization.', icon: 'science' },
+                { id: '06', title: 'Polish', desc: 'Taste enhancement.', icon: 'diamond' },
+                { id: '07', title: 'Bottling', desc: 'Sealed for purity.', icon: 'inventory_2' },
+            ];
+
+            const products = [
+                { id: '1', name: '75cl Premium', price: 150, image: 'https://images.unsplash.com/photo-1602143407151-01114195bc03?w=400&q=80' },
+                { id: '2', name: '50cl On-the-Go', price: 100, image: 'https://images.unsplash.com/photo-1523362628745-0c100150b504?w=400&q=80' },
+                { id: '3', name: '19L Dispenser', price: 1200, image: 'https://images.unsplash.com/photo-1548839140-29a749e1cf4d?w=400&q=80' },
+                { id: '4', name: 'Sachet Pack', price: 300, image: 'https://images.unsplash.com/photo-1621451537084-482c73073a0f?w=400&q=80' },
+            ];
+
+            return (
+                <div className="animate-fade-in">
+                    <header className="relative h-screen flex items-center justify-center overflow-hidden bg-gradient-to-b from-blue-100 via-blue-200 to-primary/30 dark:from-slate-950 dark:via-blue-950 dark:to-slate-900 transition-colors duration-500">
+                        <div className="absolute inset-0 overflow-hidden opacity-30 dark:opacity-10 pointer-events-none">
+                            <div className="absolute top-[-100%] left-[-100%] w-[300%] h-[300%] bg-[conic-gradient(from_0deg,transparent_0deg,white_15deg,transparent_30deg,white_45deg,transparent_60deg)] light-ray blur-3xl"></div>
+                        </div>
+                        <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+                            {[...Array(12)].map((_, i) => (
+                                <div key={i} className={`bubble ${i % 3 === 0 ? 'w-2 h-2' : i % 3 === 1 ? 'w-4 h-4' : 'w-8 h-8'}`} style={{ left: `${Math.random() * 100}%`, animationDelay: `${Math.random() * 10}s`, animationDuration: `${8 + Math.random() * 12}s` }}></div>
+                            ))}
+                        </div>
+
+                        <div className="relative z-20 text-center px-6 max-w-5xl mx-auto">
+                            <div className="inline-flex items-center px-6 py-2 mb-8 border border-slate-200 dark:border-white/10 rounded-full bg-white/40 dark:bg-white/5 backdrop-blur-md animate-slide-up">
+                                <span className="w-2.5 h-2.5 rounded-full bg-blue-500 mr-3 animate-pulse"></span>
+                                <span className="text-xs font-bold tracking-widest uppercase text-slate-600 dark:text-blue-300">Medical Grade Purification</span>
+                            </div>
+                            <h1 className="text-6xl md:text-8xl font-light tracking-tight text-slate-900 dark:text-white mb-8 leading-tight animate-slide-up" style={{ animationDelay: '0.1s' }}>
+                                <span className="block italic font-serif">Purity in</span>
+                                <span className="block font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-400 dark:from-primary dark:to-blue-300">Every Drop.</span>
+                            </h1>
+                            <p className="text-xl md:text-2xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto mb-12 font-light leading-relaxed animate-slide-up" style={{ animationDelay: '0.2s' }}>
+                                Experience water refined through seven stages of molecular purification. Traceable quality, delivered to your door.
+                            </p>
+                            <div className="flex flex-col sm:flex-row items-center justify-center gap-6 animate-slide-up" style={{ animationDelay: '0.3s' }}>
+                                <button className="px-10 py-5 bg-slate-900 dark:bg-primary text-white dark:text-secondary rounded-2xl font-bold text-lg hover:scale-105 transition-all shadow-xl shadow-blue-200 dark:shadow-none">View Catalog</button>
+                                <button onClick={() => setPage('process')} className="flex items-center gap-3 px-10 py-5 bg-white/40 dark:bg-white/5 backdrop-blur border border-slate-200 dark:border-white/10 rounded-2xl font-bold text-lg hover:bg-white dark:hover:bg-white/10 transition-all">
+                                    <span className="material-icons text-blue-500">science</span>
+                                    Explore Process
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className="absolute bottom-0 left-0 w-full h-48 z-10 overflow-hidden pointer-events-none">
+                            <div className="absolute bottom-[-2px] left-0 w-[400%] h-3/4 animate-wave-slow opacity-20 text-blue-400 dark:text-blue-900 fill-current">
+                                <svg viewBox="0 0 1000 100" className="w-full h-full" preserveAspectRatio="none"><path d="M0 50 C 150 20, 350 80, 500 50 C 650 20, 850 80, 1000 50 V 100 H 0 Z" /></svg>
+                            </div>
+                            <div className="absolute bottom-[-1px] left-0 w-[400%] h-1/2 animate-wave-fast text-white dark:text-background-dark fill-current">
+                                <svg viewBox="0 0 1000 100" className="w-full h-full" preserveAspectRatio="none"><path d="M0 70 C 250 40, 250 100, 500 70 C 750 40, 750 100, 1000 70 V 100 H 0 Z" /></svg>
+                            </div>
+                        </div>
+                    </header>
+
+                    <section className="py-32 bg-white dark:bg-background-dark transition-colors duration-500">
+                        <div className="max-w-7xl mx-auto px-6">
+                            <div className="text-center mb-20">
+                                <h2 className="text-4xl font-bold text-slate-900 dark:text-white mb-6">7 Steps to Purity</h2>
+                                <p className="text-slate-500 max-w-xl mx-auto">Our proprietary filtration process removes 99.99% of impurities while retaining essential minerals.</p>
+                            </div>
+                            <div className="grid grid-cols-2 md:grid-cols-7 gap-6">
+                                {steps.map((step) => (
+                                    <div key={step.id} className="text-center group">
+                                        <div className="w-16 h-16 bg-slate-50 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-blue-500 dark:group-hover:bg-primary transition-colors duration-500">
+                                            <span className="material-icons text-slate-400 group-hover:text-white dark:group-hover:text-secondary">{step.icon}</span>
+                                        </div>
+                                        <h3 className="text-xs font-bold uppercase tracking-widest text-slate-900 dark:text-white mb-2">{step.id} {step.title}</h3>
+                                        <p className="text-[10px] text-slate-400 font-medium px-2">{step.desc}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+
+                    <section className="py-32 bg-slate-50 dark:bg-slate-900/50">
+                        <div className="max-w-7xl mx-auto px-6">
+                            <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+                                {products.map(p => (
+                                    <div key={p.id} className="bg-white dark:bg-slate-800 p-6 rounded-3xl border border-slate-100 dark:border-white/5 shadow-sm hover:shadow-xl transition-all">
+                                        <div className="h-56 bg-slate-100 dark:bg-slate-700 rounded-2xl mb-6 overflow-hidden">
+                                            <img src={p.image} className="w-full h-full object-cover" />
+                                        </div>
+                                        <h3 className="font-bold text-slate-900 dark:text-white mb-1">{p.name}</h3>
+                                        <div className="flex justify-between items-center mt-4 pt-4 border-t border-slate-50 dark:border-white/5">
+                                            <span className="font-bold text-blue-600 dark:text-primary">₦{p.price}</span>
+                                            <button className="bg-slate-900 dark:bg-slate-700 text-white px-4 py-2 rounded-xl text-xs font-bold hover:bg-blue-600 transition-colors">Add</button>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            )
+        };
+
+        const Process = () => (
+            <div className="pt-32 pb-32 animate-fade-in px-6 max-w-5xl mx-auto">
+                <header className="mb-20">
+                    <h2 className="text-5xl font-bold text-slate-900 dark:text-white mb-6">Molecular Engineering</h2>
+                    <p className="text-xl text-slate-500 font-light">The standard in precision hydration. Seven stages of absolute clarity.</p>
+                </header>
+                <div className="space-y-32">
+                    {[
+                        { title: 'Pre-Filtration', desc: 'Raw water passes through a 5-micron polypropylene filter, capturing coarse particles like sand and rust.', img: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?w=800&q=80' },
+                        { title: 'Reverse Osmosis', desc: 'The heart of our process. High pressure forces water through a semi-permeable membrane, rejecting heavy metals.', img: 'https://images.unsplash.com/photo-1621451537084-482c73073a0f?w=800&q=80' },
+                        { title: 'UV Sterilization', desc: 'A final biological safeguard. High-intensity UV rays deconstruct micro-organic DNA.', img: 'https://images.unsplash.com/photo-1559839914-17a5e963972a?w=800&q=80' }
+                    ].map((step, idx) => (
+                        <div key={idx} className={`flex flex-col ${idx % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} gap-16 items-center`}>
+                            <div className="w-full md:w-1/2">
+                                <div className="h-96 rounded-3xl overflow-hidden shadow-2xl">
+                                    <img src={step.img} className="w-full h-full object-cover" />
+                                </div>
+                            </div>
+                            <div className="w-full md:w-1/2">
+                                <span className="text-blue-500 font-bold tracking-[0.3em] uppercase text-xs mb-4 block">Stage 0{idx + 1}</span>
+                                <h3 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">{step.title}</h3>
+                                <p className="text-lg text-slate-500 leading-relaxed">{step.desc}</p>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        );
+
+        const Impact = () => (
+            <div className="pt-32 pb-32 animate-fade-in">
+                <div className="max-w-7xl mx-auto px-6">
+                    <div className="relative h-[600px] rounded-[3rem] overflow-hidden group">
+                        <img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=1200&q=80" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/20 to-transparent"></div>
+                        <div className="absolute bottom-16 left-16 max-w-2xl text-white">
+                            <h2 className="text-6xl font-bold mb-6 italic font-serif">Social Solidarity</h2>
+                            <p className="text-xl opacity-80 font-light">Our profit-for-purity initiative provides 10 liters of clean water to underserved communities for every 100 liters sold.</p>
+                        </div>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mt-20">
+                        <div className="p-10 bg-white dark:bg-slate-800 rounded-3xl shadow-sm">
+                            <h4 className="text-5xl font-bold text-blue-500 mb-4 tracking-tighter">1.2M</h4>
+                            <p className="text-slate-500 font-bold uppercase tracking-widest text-xs">Liters Donated YTD</p>
+                        </div>
+                        <div className="p-10 bg-white dark:bg-slate-800 rounded-3xl shadow-sm">
+                            <h4 className="text-5xl font-bold text-blue-500 mb-4 tracking-tighter">54</h4>
+                            <p className="text-slate-500 font-bold uppercase tracking-widest text-xs">Communities Served</p>
+                        </div>
+                        <div className="p-10 bg-white dark:bg-slate-800 rounded-3xl shadow-sm">
+                            <h4 className="text-5xl font-bold text-blue-500 mb-4 tracking-tighter">100%</h4>
+                            <p className="text-slate-500 font-bold uppercase tracking-widest text-xs">Transparency</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+
+        const Logistics = () => (
+            <div className="pt-32 pb-32 animate-fade-in px-6">
+                <div className="max-w-4xl mx-auto">
+                    <h2 className="text-5xl font-bold text-slate-900 dark:text-white mb-20 text-center italic font-serif">Operational Excellence</h2>
+                    <div className="space-y-4">
+                        {[
+                            { title: 'Strategic Fleet', icon: 'local_shipping', desc: 'Real-time GPS tracking for priority delivery within 4 hours.' },
+                            { title: 'Cold Chain', icon: 'ac_unit', desc: 'Temperature-controlled storage ensuring refreshing clarity upon arrival.' },
+                            { title: 'Eco Recirculation', icon: 'recycling', desc: 'Advanced bottle recovery system reducing plastic waste by 70%.' }
+                        ].map((item, i) => (
+                            <div key={i} className="bg-white dark:bg-slate-800 p-12 rounded-3xl border border-slate-100 dark:border-white/5 flex gap-10 items-center">
+                                <div className="w-20 h-20 bg-blue-50 dark:bg-slate-700 rounded-2xl flex items-center justify-center">
+                                    <span className="material-icons text-blue-500 text-3xl">{item.icon}</span>
+                                </div>
+                                <div>
+                                    <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">{item.title}</h3>
+                                    <p className="text-slate-500 text-lg">{item.desc}</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        );
+
+        // --- MAIN APP ---
+
+        const App = () => {
+            const [page, setPage] = useState('home');
+
+            useEffect(() => {
+                window.scrollTo(0, 0);
+            }, [page]);
+
+            return (
+                <div className="flex flex-col min-h-screen">
+                    <Navbar currentPage={page} setPage={setPage} />
+                    <main className="flex-grow">
+                        {page === 'home' && <Home setPage={setPage} />}
+                        {page === 'process' && <Process />}
+                        {page === 'impact' && <Impact />}
+                        {page === 'logistics' && <Logistics />}
+                    </main>
+                    <Footer />
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+
+</html>
