@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studio Assets Index</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --text: #f8fafc;
+            --accent: #10b981;
+            --accent-hover: #059669;
+            --card-bg: #1e293b;
+            --border: #334155;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 2rem;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: var(--accent);
+            margin: 0;
+        }
+
+        .file-list {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.5rem;
+        }
+
+        .file-item {
+            background: var(--card-bg);
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            transition: all 0.2s ease;
+            text-decoration: none;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+        }
+
+        .file-item:hover {
+            border-color: var(--accent);
+            transform: translateX(4px);
+            background: #2d3748;
+        }
+
+        .file-path {
+            font-family: monospace;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .dir-indicator {
+            color: var(--accent);
+            margin-right: 0.5rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Studio Assets Index</h1>
+            <p>Direct links to all generated HTML source files in the Studio folder.</p>
+        </header>
+        <div class="file-list">
+            <a href="docs/backend.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">docs/backend.html</span></a>
+            <a href="docs/blueprint.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">docs/blueprint.html</span></a>
+            <a href="docs/credentials.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">docs/credentials.html</span></a>
+            <a href="docs/github-setup.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">docs/github-setup.html</span></a>
+            <a href="src/ai/dev.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/ai/dev.html</span></a>
+            <a href="src/ai/flows/ai-anomaly-alerts.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/ai/flows/ai-anomaly-alerts.html</span></a>
+            <a href="src/ai/genkit.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/ai/genkit.html</span></a>
+            <a href="src/app/dashboard/approvals/page.html" class="file-item"><span class="dir-indicator">📄</span>
+                <span class="file-path">src/app/dashboard/approvals/page.html</span></a>
+            <a href="src/app/dashboard/bakery/page.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/app/dashboard/bakery/page.html</span></a>
+            <a href="src/app/dashboard/dining/page.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/app/dashboard/dining/page.html</span></a>
+            <a href="src/app/dashboard/games/page.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/app/dashboard/games/page.html</span></a>
+            <a href="src/app/dashboard/inbox/page.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/app/dashboard/inbox/page.html</span></a>
+            <a href="src/app/dashboard/inventory/page.html" class="file-item"><span class="dir-indicator">📄</span>
+                <span class="file-path">src/app/dashboard/inventory/page.html</span></a>
+            <a href="src/app/dashboard/logs/page.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/app/dashboard/logs/page.html</span></a>
+            <a href="src/app/dashboard/lounge/page.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/app/dashboard/lounge/page.html</span></a>
+            <a href="src/app/dashboard/market/page.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/app/dashboard/market/page.html</span></a>
+            <a href="src/app/dashboard/orders/page.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/app/dashboard/orders/page.html</span></a>
+            <a href="src/app/dashboard/users/page.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/app/dashboard/users/page.html</span></a>
+            <a href="src/app/dashboard/water/page.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/app/dashboard/water/page.html</span></a>
+            <a href="src/app/dashboard/layout.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/app/dashboard/layout.html</span></a>
+            <a href="src/app/dashboard/page.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/app/dashboard/page.html</span></a>
+            <a href="src/app/lib/mock-data.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/app/lib/mock-data.html</span></a>
+            <a href="src/app/lib/placeholder-images.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/app/lib/placeholder-images.html</span></a>
+            <a href="src/app/login/page.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/app/login/page.html</span></a>
+            <a href="src/app/signup/page.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/app/signup/page.html</span></a>
+            <a href="src/app/globals.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/app/globals.html</span></a>
+            <a href="src/app/layout.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/app/layout.html</span></a>
+            <a href="src/app/page.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/app/page.html</span></a>
+            <a href="src/components/dashboard/action-guard.html" class="file-item"><span class="dir-indicator">📄</span>
+                <span class="file-path">src/components/dashboard/action-guard.html</span></a>
+            <a href="src/components/dashboard/activity-feed.html" class="file-item"><span
+                    class="dir-indicator">📄</span> <span
+                    class="file-path">src/components/dashboard/activity-feed.html</span></a>
+            <a href="src/components/dashboard/anomaly-detector.html" class="file-item"><span
+                    class="dir-indicator">📄</span> <span
+                    class="file-path">src/components/dashboard/anomaly-detector.html</span></a>
+            <a href="src/components/dashboard/approval-inbox.html" class="file-item"><span
+                    class="dir-indicator">📄</span> <span
+                    class="file-path">src/components/dashboard/approval-inbox.html</span></a>
+            <a href="src/components/dashboard/approval-queue.html" class="file-item"><span
+                    class="dir-indicator">📄</span> <span
+                    class="file-path">src/components/dashboard/approval-queue.html</span></a>
+            <a href="src/components/dashboard/division-modules.html" class="file-item"><span
+                    class="dir-indicator">📄</span> <span
+                    class="file-path">src/components/dashboard/division-modules.html</span></a>
+            <a href="src/components/dashboard/hardware-map.html" class="file-item"><span class="dir-indicator">📄</span>
+                <span class="file-path">src/components/dashboard/hardware-map.html</span></a>
+            <a href="src/components/dashboard/live-preview.html" class="file-item"><span class="dir-indicator">📄</span>
+                <span class="file-path">src/components/dashboard/live-preview.html</span></a>
+            <a href="src/components/dashboard/request-status.html" class="file-item"><span
+                    class="dir-indicator">📄</span> <span
+                    class="file-path">src/components/dashboard/request-status.html</span></a>
+            <a href="src/components/dashboard/revenue-chart.html" class="file-item"><span
+                    class="dir-indicator">📄</span> <span
+                    class="file-path">src/components/dashboard/revenue-chart.html</span></a>
+            <a href="src/components/dashboard/role-switcher.html" class="file-item"><span
+                    class="dir-indicator">📄</span> <span
+                    class="file-path">src/components/dashboard/role-switcher.html</span></a>
+            <a href="src/components/ui/accordion.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/components/ui/accordion.html</span></a>
+            <a href="src/components/ui/alert-dialog.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/components/ui/alert-dialog.html</span></a>
+            <a href="src/components/ui/alert.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/components/ui/alert.html</span></a>
+            <a href="src/components/ui/avatar.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/components/ui/avatar.html</span></a>
+            <a href="src/components/ui/badge.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/components/ui/badge.html</span></a>
+            <a href="src/components/ui/button.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/components/ui/button.html</span></a>
+            <a href="src/components/ui/calendar.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/components/ui/calendar.html</span></a>
+            <a href="src/components/ui/card.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/components/ui/card.html</span></a>
+            <a href="src/components/ui/carousel.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/components/ui/carousel.html</span></a>
+            <a href="src/components/ui/chart.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/components/ui/chart.html</span></a>
+            <a href="src/components/ui/checkbox.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/components/ui/checkbox.html</span></a>
+            <a href="src/components/ui/collapsible.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/components/ui/collapsible.html</span></a>
+            <a href="src/components/ui/dialog.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/components/ui/dialog.html</span></a>
+            <a href="src/components/ui/dropdown-menu.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/components/ui/dropdown-menu.html</span></a>
+            <a href="src/components/ui/form.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/components/ui/form.html</span></a>
+            <a href="src/components/ui/input.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/components/ui/input.html</span></a>
+            <a href="src/components/ui/label.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/components/ui/label.html</span></a>
+            <a href="src/components/ui/menubar.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/components/ui/menubar.html</span></a>
+            <a href="src/components/ui/popover.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/components/ui/popover.html</span></a>
+            <a href="src/components/ui/progress.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/components/ui/progress.html</span></a>
+            <a href="src/components/ui/radio-group.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/components/ui/radio-group.html</span></a>
+            <a href="src/components/ui/scroll-area.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/components/ui/scroll-area.html</span></a>
+            <a href="src/components/ui/select.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/components/ui/select.html</span></a>
+            <a href="src/components/ui/separator.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/components/ui/separator.html</span></a>
+            <a href="src/components/ui/sheet.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/components/ui/sheet.html</span></a>
+            <a href="src/components/ui/sidebar.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/components/ui/sidebar.html</span></a>
+            <a href="src/components/ui/skeleton.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/components/ui/skeleton.html</span></a>
+            <a href="src/components/ui/slider.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/components/ui/slider.html</span></a>
+            <a href="src/components/ui/switch.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/components/ui/switch.html</span></a>
+            <a href="src/components/ui/table.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/components/ui/table.html</span></a>
+            <a href="src/components/ui/tabs.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/components/ui/tabs.html</span></a>
+            <a href="src/components/ui/textarea.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/components/ui/textarea.html</span></a>
+            <a href="src/components/ui/toast.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/components/ui/toast.html</span></a>
+            <a href="src/components/ui/toaster.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/components/ui/toaster.html</span></a>
+            <a href="src/components/ui/tooltip.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/components/ui/tooltip.html</span></a>
+            <a href="src/context/role-context.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/context/role-context.html</span></a>
+            <a href="src/firebase/auth/use-user.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/firebase/auth/use-user.html</span></a>
+            <a href="src/firebase/firestore/use-collection.html" class="file-item"><span class="dir-indicator">📄</span>
+                <span class="file-path">src/firebase/firestore/use-collection.html</span></a>
+            <a href="src/firebase/firestore/use-doc.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/firebase/firestore/use-doc.html</span></a>
+            <a href="src/firebase/client-provider.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/firebase/client-provider.html</span></a>
+            <a href="src/firebase/config.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/firebase/config.html</span></a>
+            <a href="src/firebase/error-emitter.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/firebase/error-emitter.html</span></a>
+            <a href="src/firebase/errors.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/firebase/errors.html</span></a>
+            <a href="src/firebase/index.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/firebase/index.html</span></a>
+            <a href="src/firebase/init.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/firebase/init.html</span></a>
+            <a href="src/firebase/provider.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/firebase/provider.html</span></a>
+            <a href="src/hooks/use-mobile.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/hooks/use-mobile.html</span></a>
+            <a href="src/hooks/use-toast.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/hooks/use-toast.html</span></a>
+            <a href="src/lib/placeholder-images.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/lib/placeholder-images.html</span></a>
+            <a href="src/lib/utils.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">src/lib/utils.html</span></a>
+            <a href=".gitignore.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">.gitignore.html</span></a>
+            <a href=".modified.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">.modified.html</span></a>
+            <a href="apphosting.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">apphosting.html</span></a>
+            <a href="components.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">components.html</span></a>
+            <a href="next.config.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">next.config.html</span></a>
+            <a href="package-lock.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">package-lock.html</span></a>
+            <a href="package.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">package.html</span></a>
+            <a href="postcss.config.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">postcss.config.html</span></a>
+            <a href="README.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">README.html</span></a>
+            <a href="tailwind.config.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">tailwind.config.html</span></a>
+            <a href="tsconfig.html" class="file-item"><span class="dir-indicator">📄</span> <span
+                    class="file-path">tsconfig.html</span></a>
+        </div>
+    </div>
+</body>
+
+</html>
