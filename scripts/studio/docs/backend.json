@@ -1,0 +1,45 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "User Profile",
+      "description": "Internal staff or administrator profile",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "name": { "type": "string" },
+        "role": { "type": "string", "enum": ["admin_boss", "admin_head", "admin_staff"] },
+        "division": { "type": "string", "enum": ["bakery", "dining", "games", "lounge", "market", "water", "global"] },
+        "status": { "type": "string", "enum": ["active", "pending", "rejected"] }
+      },
+      "required": ["uid", "email", "role", "division", "status"]
+    },
+    "EnrollmentRequest": {
+      "title": "Enrollment Request",
+      "description": "A request from a new staff member to join the platform",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "email": { "type": "string" },
+        "name": { "type": "string" },
+        "requestedRole": { "type": "string" },
+        "requestedDivision": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected"] }
+      }
+    }
+  },
+  "auth": {
+    "providers": ["password"]
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "Storage for user roles and division mapping"
+    },
+    "/enrollmentRequests/{requestId}": {
+      "schema": "EnrollmentRequest",
+      "description": "Queue for Boss approval of new accounts"
+    }
+  }
+}
